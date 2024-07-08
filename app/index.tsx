@@ -17,6 +17,7 @@ import LoadingScreen from "./screens/LoadingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import { child, get, ref, set } from "firebase/database";
 import CameraTest from "@/components/CameraViewComponent";
+import AddWarrantyScreen from "./screens/home/add-warranty/AddWarrantyScreen";
 const randomMC = require("random-material-color");
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -57,42 +58,42 @@ export default function RootLayout() {
   const theme = useTheme();
   const colorScheme = useColorScheme();
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setIsLoading(true);
-  //     onAuthStateChanged(auth, async (user) => {
-  //       if (user) {
-  //         // User is signed in, see docs for a list of available properties
-  //         // https://firebase.google.com/docs/reference/js/auth.user
-  //         const userId = auth.currentUser?.uid;
-  //         const snapshot = await get(child(ref(database), `users/${userId}`));
-  //         if (!snapshot.exists()) {
-  //           const profileColor = randomMC.getColor();
-  //           await set(ref(database, "users/" + userId), {
-  //             profile_color: profileColor,
-  //           });
-  //         }
-  //         setUserLoggedIn(true);
-  //       } else {
-  //         // User is signed out
-  //         setUserLoggedIn(false);
-  //       }
-  //       setIsLoading(false);
-  //     });
-  //   }, 1000);
-  // }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(true);
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/auth.user
+          const userId = auth.currentUser?.uid;
+          const snapshot = await get(child(ref(database), `users/${userId}`));
+          if (!snapshot.exists()) {
+            const profileColor = randomMC.getColor();
+            await set(ref(database, "users/" + userId), {
+              profile_color: profileColor,
+            });
+          }
+          setUserLoggedIn(true);
+        } else {
+          // User is signed out
+          setUserLoggedIn(false);
+        }
+        setIsLoading(false);
+      });
+    }, 1000);
+  }, []);
 
-  // if (userLoggedIn) {
-  //   const userId = auth.currentUser?.uid;
-  //   get(child(ref(database), `users/${userId}`)).then((snapshot) => {
-  //     if (!snapshot.exists()) {
-  //       const profileColor = randomMC.getColor();
-  //       set(ref(database, "users/" + userId), {
-  //         profile_color: profileColor,
-  //       });
-  //     }
-  //   });
-  // }
+  if (userLoggedIn) {
+    const userId = auth.currentUser?.uid;
+    get(child(ref(database), `users/${userId}`)).then((snapshot) => {
+      if (!snapshot.exists()) {
+        const profileColor = randomMC.getColor();
+        set(ref(database, "users/" + userId), {
+          profile_color: profileColor,
+        });
+      }
+    });
+  }
 
   return (
     <PaperProvider>
@@ -107,13 +108,13 @@ export default function RootLayout() {
           },
         ]}
       >
-        {/* {userLoggedIn && <HomeScreen />}
+        {userLoggedIn && <HomeScreen />}
         {!userLoggedIn && !isLoading && !notRegistered && (
           <LoginScreen onRegister={setNotRegistered} />
         )}
         {isLoading && <LoadingScreen />}
-        {notRegistered && <RegisterScreen onLogin={setNotRegistered} />} */}
-        <CameraTest />
+        {notRegistered && <RegisterScreen onLogin={setNotRegistered} />}
+        {/* <AddWarrantyScreen /> */}
         <StatusBar style="auto" />
       </View>
     </PaperProvider>

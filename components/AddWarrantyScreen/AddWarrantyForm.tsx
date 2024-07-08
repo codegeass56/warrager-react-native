@@ -1,7 +1,13 @@
 import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
-import { Platform, StyleSheet, useColorScheme, View } from "react-native";
-import { ActivityIndicator, Button, Icon, Text } from "react-native-paper";
+import {
+  Platform,
+  StyleSheet,
+  useColorScheme,
+  View,
+  Image,
+} from "react-native";
+import { Button, Text } from "react-native-paper";
 import * as Localization from "expo-localization";
 import TextField from "../FormComponents/TextField";
 import EmailField from "../FormComponents/EmailField";
@@ -9,12 +15,11 @@ import DatePicker from "../FormComponents/DatePicker";
 import ProductPriceInput from "./ProductPriceInput";
 import WarrantyPeriodInput from "./WarrantyPeriodInput";
 import StoreContactInput from "./StoreContactInput";
-import CategoryDropdown from "./CategoryDropdown";
 import { child, push, ref, set, update } from "firebase/database";
 import { auth, database } from "@/firebaseConfig";
-import { useEffect, useState } from "react";
-import { FirebaseError } from "firebase/app";
+import { useState } from "react";
 import SectionTitle from "../SectionTitle";
+import FormButton from "../FormComponents/FormButton";
 
 const PRODUCT_NAME_FIELD_NAME = "productName";
 const DATE_FIELD_NAME = "dateOfPurchase";
@@ -46,6 +51,7 @@ type FormData = {
 
 function AddWarrantyForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [imageUri, setImageUri] = useState("https://picsum.photos/200");
   const router = useRouter();
   const currentUser = auth.currentUser;
   const colorScheme = useColorScheme();
@@ -72,6 +78,11 @@ function AddWarrantyForm() {
       [STORE_CONTACT_FIELD_NAME]: "",
     },
   });
+
+  const blurhash =
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj\
+    [ayj[j[fQayWCoeoeaya} j[ayfQa{oLj ? j[WVj[ayayj[fQoff7azayj[ayj[j[\
+    ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   async function onAddWarranty(data: FormData) {
     //Create deep copy of date input
@@ -198,10 +209,41 @@ function AddWarrantyForm() {
         warrantyPeriodFieldCompName={WARRANTY_PERIOD_FIELD_NAME}
       />
       <View style={styles.dateOfPurchaseContainer}>
-        <Text style={styles.dateOfPurchaseText}>
-          Attach picture of receipt:{" "}
-        </Text>
+        <Text style={styles.attachPictureText}>Attach picture of receipt:</Text>
+        {imageUri === "" ? (
+          <FormButton
+            text={"Select Picture"}
+            mode="contained"
+            style={styles.selectPictureBtn}
+            onPress={() => {}}
+          />
+        ) : null}
       </View>
+      {imageUri ? (
+        <View style={styles.imageContainer}>
+          <Image
+            style={styles.image}
+            source={{ uri: imageUri }}
+            resizeMode="cover"
+          />
+          <View style={styles.imagePreviewBtnContainer}>
+            <FormButton
+              text={"Change Picture"}
+              mode="contained"
+              style={styles.selectPictureBtn}
+              onPress={() => {}}
+            />
+            <FormButton
+              text={"Remove Picture"}
+              mode="contained"
+              style={styles.selectPictureBtn}
+              onPress={() => {
+                setImageUri("");
+              }}
+            />
+          </View>
+        </View>
+      ) : null}
       <SectionTitle text="Store Details" style={styles.storeDetailsTitle} />
       <TextField
         control={control}
@@ -271,8 +313,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dateOfPurchaseText: {
-    fontSize: 16,
+    fontSize: 18,
     marginRight: 10,
+    fontWeight: Platform.OS === "ios" ? "500" : "bold",
+  },
+  attachPictureText: {
+    fontSize: 17,
+    marginRight: 10,
+    fontWeight: Platform.OS === "ios" ? "500" : "bold",
+  },
+  selectPictureBtn: {
+    borderRadius: 10,
+  },
+  imageContainer: {
+    // flex: 10,
+    width: "100%",
+    height: 250,
+    flexDirection: "row",
+  },
+  image: {
+    flex: 1,
+  },
+  imagePreviewBtnContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
   },
 });
 
