@@ -34,7 +34,6 @@ function RegistrationForm({ onLogin }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const colorScheme = useColorScheme();
 
-  const router = useRouter();
   const {
     control,
     handleSubmit,

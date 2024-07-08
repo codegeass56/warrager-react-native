@@ -1,14 +1,10 @@
-import {
-  Camera,
-  CameraType,
-  CameraView,
-  useCameraPermissions,
-} from "expo-camera";
+import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
+  Alert,
+  Linking,
   Platform,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -19,23 +15,23 @@ import {
   GestureUpdateEvent,
   PinchGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
-import { Button, IconButton } from "react-native-paper";
-import ImagePreview from "./ImagePreview";
+import { Button, IconButton, Text } from "react-native-paper";
+import ImagePreview from "../../components/ImagePreview";
 import { FlipType, manipulateAsync, SaveFormat } from "expo-image-manipulator";
+import FormButton from "@/components/FormComponents/FormButton";
+import SectionTitle from "@/components/SectionTitle";
 
-export default function CameraTest() {
+export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
+  const [permissionStatus, setPermissionStatus] = useState<
+    "granted" | "denied" | "undetermined"
+  >("undetermined");
   const cameraRef = useRef<CameraView>(null);
   const [pictureSize, setPictureSize] = useState<string | undefined>();
   const [zoom, setZoom] = useState(0);
   const [lastZoom, setLastZoom] = useState(0);
   const [imageUri, setImageUri] = useState("");
   const [facing, setFacing] = useState<CameraType>("back");
-
-  const blurhash =
-    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj\
-    [ayj[j[fQayWCoeoeaya} j[ayfQa{oLj ? j[WVj[ayayj[fQoff7azayj[ayj[j[\
-    ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   const onPinch = useCallback(
     (e: GestureUpdateEvent<PinchGestureHandlerEventPayload>) => {
@@ -105,26 +101,42 @@ export default function CameraTest() {
 
     setImageUri(photo.uri);
   }
-
   if (!permission) {
     // Camera permissions are still loading.
     return <View />;
   }
 
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: "center" }}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission}>Grant Permission</Button>
-      </View>
-    );
+  async function getPermissions() {
+    await requestPermission();
+    setPermissionStatus(permission?.granted ? "granted" : "denied");
   }
 
-  {
-    /*//TODO: Handle camera permission rejection */
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <SectionTitle
+          text={`We need your permission to show the camera. ${
+            permissionStatus === "denied"
+              ? "Please enable the camera permission in the app settings."
+              : ""
+          }`}
+          style={styles.grantPermissionText}
+        />
+        {permissionStatus === "undetermined" ? (
+          <FormButton
+            onPress={getPermissions}
+            text="Grant Permission"
+            style={styles.grantPermissionBtn}
+          />
+        ) : (
+          <FormButton
+            onPress={() => Linking.openSettings()}
+            text="Open Settings"
+            style={styles.grantPermissionBtn}
+          />
+        )}
+      </View>
+    );
   }
 
   return imageUri ? (
@@ -172,6 +184,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+    // alignItems: "center",
+    // padding: 20,
+    // gap: 20,
   },
   emptyView: {
     flex: 1,
@@ -212,5 +227,13 @@ const styles = StyleSheet.create({
     width: 70,
     borderRadius: 50,
     backgroundColor: "white",
+  },
+  grantPermissionBtn: {
+    borderRadius: 10,
+  },
+  grantPermissionText: {
+    fontSize: 18,
+    fontWeight: Platform.OS === "ios" ? "500" : "bold",
+    textAlign: "center",
   },
 });

@@ -55,6 +55,26 @@ function _layout() {
           headerShadowVisible: false,
         }}
       />
+      <Stack.Screen
+        name="screens/CameraScreen"
+        options={{
+          headerShown: true,
+          title: "",
+          headerStyle:
+            Platform.OS === "android"
+              ? {
+                  backgroundColor:
+                    colorScheme === "dark" ? "#a9a5e2" : theme.colors.surface,
+                }
+              : {
+                  backgroundColor:
+                    colorScheme === "dark"
+                      ? theme.colors.onSurface
+                      : theme.colors.surface,
+                },
+          headerShadowVisible: false,
+        }}
+      />
     </Stack>
   );
 }

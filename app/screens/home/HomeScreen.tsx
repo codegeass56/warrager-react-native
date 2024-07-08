@@ -1,21 +1,13 @@
-import HomeScreenHeader from "@/components/HomeScreen/HomeScreenHeader";
 import SearchBar from "@/components/HomeScreen/SearchBar";
 import ProductList from "@/components/HomeScreen/ProductList";
 import Filter from "@/components/HomeScreen/Filter";
-import UserAccountMenu from "@/components/HomeScreen/UserAccountMenu";
 import { auth, database } from "@/firebaseConfig";
 import { useNavigation, useRouter } from "expo-router";
 import { signOut } from "firebase/auth";
 import { child, get, ref } from "firebase/database";
 import { useEffect, useState } from "react";
-import {
-  Platform,
-  StyleSheet,
-  useColorScheme,
-  View,
-  Animated,
-} from "react-native";
-import { FAB, MD3LightTheme, PaperProvider, Text } from "react-native-paper";
+import { Platform, StyleSheet, useColorScheme, View } from "react-native";
+import { FAB, PaperProvider } from "react-native-paper";
 import LoadingScreen from "../LoadingScreen";
 import { useForm } from "react-hook-form";
 import HeaderAndAccountMenu from "@/components/HeaderAndAccountMenu";
@@ -226,10 +218,6 @@ function HomeScreen() {
                 text="No products yet? Try adding one!"
                 style={styles.noProductsText}
               />
-              {/* <SectionTitle
-                text="Try adding a new one!"
-                style={styles.noProductsText}
-              /> */}
             </View>
           ) : (
             <ProductList

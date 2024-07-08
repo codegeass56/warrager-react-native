@@ -16,7 +16,7 @@ import HomeScreen from "./screens/home/HomeScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import { child, get, ref, set } from "firebase/database";
-import CameraTest from "@/components/CameraViewComponent";
+import CameraScreen from "@/app/screens/CameraScreen";
 import AddWarrantyScreen from "./screens/home/add-warranty/AddWarrantyScreen";
 const randomMC = require("random-material-color");
 
@@ -114,7 +114,7 @@ export default function RootLayout() {
         )}
         {isLoading && <LoadingScreen />}
         {notRegistered && <RegisterScreen onLogin={setNotRegistered} />}
-        {/* <AddWarrantyScreen /> */}
+        {/* <CameraScreen /> */}
         <StatusBar style="auto" />
       </View>
     </PaperProvider>

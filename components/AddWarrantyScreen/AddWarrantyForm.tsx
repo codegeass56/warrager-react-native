@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import {
   Platform,
@@ -17,9 +17,10 @@ import WarrantyPeriodInput from "./WarrantyPeriodInput";
 import StoreContactInput from "./StoreContactInput";
 import { child, push, ref, set, update } from "firebase/database";
 import { auth, database } from "@/firebaseConfig";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SectionTitle from "../SectionTitle";
 import FormButton from "../FormComponents/FormButton";
+import { useNavigation } from "expo-router";
 
 const PRODUCT_NAME_FIELD_NAME = "productName";
 const DATE_FIELD_NAME = "dateOfPurchase";
@@ -51,15 +52,17 @@ type FormData = {
 
 function AddWarrantyForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [imageUri, setImageUri] = useState("https://picsum.photos/200");
+  const [imageUri, setImageUri] = useState("");
+  const params = useLocalSearchParams();
   const router = useRouter();
-  const currentUser = auth.currentUser;
+  const navigation = useNavigation();
+
   const colorScheme = useColorScheme();
+  const currentUser = auth.currentUser;
 
   const {
     control,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm({
     mode: "onChange",
@@ -79,10 +82,24 @@ function AddWarrantyForm() {
     },
   });
 
-  const blurhash =
-    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj\
-    [ayj[j[fQayWCoeoeaya} j[ayfQa{oLj ? j[WVj[ayayj[fQoff7azayj[ayj[j[\
-    ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+  useEffect(() => {
+    console.log(params);
+
+    if (params["imageUri"] !== "undefined") {
+      setImageUri(params["imageUri"] as string);
+    }
+  }, [params]);
+
+  useEffect(() => {
+    console.log(imageUri);
+  }, [imageUri]);
+
+  useEffect(() => {
+    navigation.addListener("beforeRemove", () => {
+      //@ts-ignore
+      navigation.setParams({ imageUri: undefined });
+    });
+  }, []);
 
   async function onAddWarranty(data: FormData) {
     //Create deep copy of date input
@@ -118,13 +135,11 @@ function AddWarrantyForm() {
       }).format(dateOfExpiry),
       [CURRENCY_FIELD_NAME]: data[CURRENCY_FIELD_NAME],
       [PRODUCT_PRICE_FIELD_NAME]: data[PRODUCT_PRICE_FIELD_NAME],
-      // [CATEGORY_FIELD_NAME]: data[CATEGORY_FIELD_NAME],
       [WARRANTY_PERIOD_FIELD_NAME]: data[WARRANTY_PERIOD_FIELD_NAME],
       [WARRANTY_DURATION_TYPE_FIELD_NAME]:
         data[WARRANTY_DURATION_TYPE_FIELD_NAME],
       [BRAND_FIELD_NAME]: data[BRAND_FIELD_NAME],
       [STORE_NAME_FIELD_NAME]: data[STORE_NAME_FIELD_NAME],
-      // [STORE_LOCATION_FIELD_NAME]: data[STORE_LOCATION_FIELD_NAME],
       [STORE_EMAIL_FIELD_NAME]: data[STORE_EMAIL_FIELD_NAME],
       [STORE_CONTACT_FIELD_NAME]: data[STORE_CONTACT_FIELD_NAME],
       // dateCreated: new Intl.DateTimeFormat("en-GB", {
@@ -182,12 +197,6 @@ function AddWarrantyForm() {
         dropdownCompName={CURRENCY_FIELD_NAME}
         priceFieldCompName={PRODUCT_PRICE_FIELD_NAME}
       />
-      {/* <CategoryDropdown
-        control={control}
-        componentName={CATEGORY_FIELD_NAME}
-        label="Category"
-        mode="outlined"
-      /> */}
       <TextField
         componentName={BRAND_FIELD_NAME}
         mode="outlined"
@@ -210,12 +219,14 @@ function AddWarrantyForm() {
       />
       <View style={styles.dateOfPurchaseContainer}>
         <Text style={styles.attachPictureText}>Attach picture of receipt:</Text>
-        {imageUri === "" ? (
+        {!imageUri ? (
           <FormButton
             text={"Select Picture"}
             mode="contained"
             style={styles.selectPictureBtn}
-            onPress={() => {}}
+            onPress={() => {
+              router.push("/screens/CameraScreen");
+            }}
           />
         ) : null}
       </View>
@@ -231,19 +242,24 @@ function AddWarrantyForm() {
               text={"Change Picture"}
               mode="contained"
               style={styles.selectPictureBtn}
-              onPress={() => {}}
+              onPress={() => {
+                router.push("/screens/CameraScreen");
+              }}
             />
             <FormButton
               text={"Remove Picture"}
               mode="contained"
               style={styles.selectPictureBtn}
               onPress={() => {
+                //@ts-ignore
+                navigation.setParams({ imageUri: undefined });
                 setImageUri("");
               }}
             />
           </View>
         </View>
       ) : null}
+
       <SectionTitle text="Store Details" style={styles.storeDetailsTitle} />
       <TextField
         control={control}
@@ -252,13 +268,6 @@ function AddWarrantyForm() {
         label="Name"
         placeholderText="Apple Store"
       />
-      {/* <TextField
-        componentName={STORE_LOCATION_FIELD_NAME}
-        control={control}
-        mode={"outlined"}
-        label={"Location"}
-        placeholderText="Mall of the Emirates"
-      /> */}
       <EmailField
         control={control}
         componentName={STORE_EMAIL_FIELD_NAME}
