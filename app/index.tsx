@@ -1,13 +1,7 @@
 import "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, useColorScheme, View } from "react-native";
-
-import {
-  MD3DarkTheme,
-  MD3LightTheme,
-  PaperProvider,
-  useTheme,
-} from "react-native-paper";
+import { PaperProvider, useTheme } from "react-native-paper";
 import LoginScreen from "./screens/LoginScreen";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
@@ -16,8 +10,6 @@ import HomeScreen from "./screens/home/HomeScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import { child, get, ref, set } from "firebase/database";
-import CameraScreen from "@/app/screens/CameraScreen";
-import AddWarrantyScreen from "./screens/home/add-warranty/AddWarrantyScreen";
 const randomMC = require("random-material-color");
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -30,9 +22,9 @@ const randomMC = require("random-material-color");
 // Refreshing the list when returning back from the save screen (need to fix the list getting stuck on refresh)
 // Deleting the warranty
 // Swipe gesture to edit or delete
+// Saving the image to Firebase and retrieving it on the home screen
 
 // Core Features:
-// Saving the image to Firebase and retrieving it on the home screen
 
 //Testing:
 // Test different user flows (with existing account and with new account). Check for any errors.

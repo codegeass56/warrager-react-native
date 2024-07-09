@@ -67,7 +67,6 @@ function EditWarrantyForm({ productId }: { productId: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [imageUri, setImageUri] = useState("");
   const params = useLocalSearchParams();
-  const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const router = useRouter();
@@ -140,23 +139,17 @@ function EditWarrantyForm({ productId }: { productId: string }) {
       }).format(dateOfExpiry),
       [CURRENCY_FIELD_NAME]: data[CURRENCY_FIELD_NAME],
       [PRODUCT_PRICE_FIELD_NAME]: data[PRODUCT_PRICE_FIELD_NAME],
-      // [CATEGORY_FIELD_NAME]: data[CATEGORY_FIELD_NAME],
       [WARRANTY_PERIOD_FIELD_NAME]: data[WARRANTY_PERIOD_FIELD_NAME],
       [WARRANTY_DURATION_TYPE_FIELD_NAME]:
         data[WARRANTY_DURATION_TYPE_FIELD_NAME],
       [BRAND_FIELD_NAME]: data[BRAND_FIELD_NAME],
       [STORE_NAME_FIELD_NAME]: data[STORE_NAME_FIELD_NAME],
-      // [STORE_LOCATION_FIELD_NAME]: data[STORE_LOCATION_FIELD_NAME],
       [STORE_EMAIL_FIELD_NAME]: data[STORE_EMAIL_FIELD_NAME],
       [STORE_CONTACT_FIELD_NAME]: data[STORE_CONTACT_FIELD_NAME],
-      // dateCreated: new Intl.DateTimeFormat("en-GB", {
-      //   timeZone: Localization.getCalendars()[0].timeZone!,
-      // }).format(new Date()),
       dateCreated: data.dateCreated,
       dateModified: new Date(),
       imageUri: imageUri ? imageUri : "",
     };
-    // Write the new post's data simultaneously in the posts list and the user's post list.
     const updates: { [key: string]: any } = {};
     updates["/users/" + currentUser?.uid + "/warranties/" + productId] =
       warrantyData;
@@ -179,18 +172,8 @@ function EditWarrantyForm({ productId }: { productId: string }) {
     ) {
       setImageUri(params["imageUri"] as string);
     }
-    // console.log(typeof params["imageUri"]);
   }, [params]);
 
-  // useEffect(() => {
-  //   navigation.addListener("beforeRemove", () => {
-  //     //@ts-ignore
-  //     navigation.setParams({ imageUri: undefined });
-  //   });
-  // }, []);
-
-  //Record purchases’ info (info: date, price, category (default and create your
-  // own), warranty period (years), seller name, seller phone, seller email...)
   return (
     <PaperProvider>
       {!getValues(DATE_FIELD_NAME) ? (
@@ -271,7 +254,6 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                   mode="contained"
                   style={styles.selectPictureBtn}
                   onPress={() => {
-                    // router.push("/screens/CameraScreen");
                     router.navigate({
                       pathname: `/screens/CameraScreen`,
                       params: {

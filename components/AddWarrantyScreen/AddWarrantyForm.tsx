@@ -1,13 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
-import {
-  Platform,
-  StyleSheet,
-  useColorScheme,
-  View,
-  Image,
-} from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Platform, StyleSheet, View, Image } from "react-native";
+import { Text } from "react-native-paper";
 import * as Localization from "expo-localization";
 import TextField from "../FormComponents/TextField";
 import EmailField from "../FormComponents/EmailField";
@@ -56,8 +50,6 @@ function AddWarrantyForm() {
   const params = useLocalSearchParams();
   const router = useRouter();
   const navigation = useNavigation();
-
-  const colorScheme = useColorScheme();
   const currentUser = auth.currentUser;
 
   const {
@@ -140,7 +132,7 @@ function AddWarrantyForm() {
       dateModified: new Date(),
       imageUri: imageUri ? imageUri : "",
     };
-    // Write the new post's data simultaneously in the posts list and the user's post list.
+
     const updates: { [key: string]: any } = {};
     updates[
       "/users/" + currentUser?.uid + "/warranties/" + newProductWarrantyKey
@@ -215,7 +207,12 @@ function AddWarrantyForm() {
             mode="contained"
             style={styles.selectPictureBtn}
             onPress={() => {
-              router.push("/screens/CameraScreen");
+              router.navigate({
+                pathname: `/screens/CameraScreen`,
+                params: {
+                  previousScreenName: "AddWarrantyScreen",
+                },
+              });
             }}
           />
         ) : null}
@@ -233,7 +230,12 @@ function AddWarrantyForm() {
               mode="contained"
               style={styles.selectPictureBtn}
               onPress={() => {
-                router.push("/screens/CameraScreen");
+                router.navigate({
+                  pathname: `/screens/CameraScreen`,
+                  params: {
+                    previousScreenName: "AddWarrantyScreen",
+                  },
+                });
               }}
             />
             <FormButton

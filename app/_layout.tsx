@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { Platform, StyleSheet, useColorScheme } from "react-native";
+import { Platform, useColorScheme } from "react-native";
 import { useTheme } from "react-native-paper";
 
 function _layout() {

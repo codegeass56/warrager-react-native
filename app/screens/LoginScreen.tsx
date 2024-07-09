@@ -1,7 +1,7 @@
 import LoginForm from "@/components/LoginScreen/LoginForm";
 import LoginHeader from "@/components/LoginScreen/LoginHeader";
 import { StyleSheet, View } from "react-native";
-import { MD3LightTheme, PaperProvider, useTheme } from "react-native-paper";
+import { PaperProvider } from "react-native-paper";
 
 type Props = {
   onRegister: React.Dispatch<React.SetStateAction<boolean>>;
