@@ -34,10 +34,6 @@ export default function CameraScreen() {
   const [imageUri, setImageUri] = useState("");
   const [facing, setFacing] = useState<CameraType>("back");
 
-  useEffect(() => {
-    console.log(params);
-  }, [params]);
-
   const onPinch = useCallback(
     (e: GestureUpdateEvent<PinchGestureHandlerEventPayload>) => {
       const velocity = e.velocity / 20;
