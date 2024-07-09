@@ -26,12 +26,23 @@ function FormButton({
   style,
 }: Props) {
   const colorScheme = useColorScheme();
+
+  let buttonColor;
+  let textColor;
+  if (mode === "contained") {
+    buttonColor = colorScheme === "dark" ? "#a9a5e2" : "#1F41BB";
+    colorScheme === "dark" ? "black" : "white";
+  } else {
+    buttonColor = undefined;
+    colorScheme === "dark" ? "#a9a5e2" : "#1F41BB";
+  }
+
   return (
     <Button
       onPress={onPress}
       mode={mode}
-      buttonColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-      textColor={colorScheme === "dark" ? "black" : "white"}
+      buttonColor={buttonColor}
+      textColor={textColor}
       loading={isLoading}
       disabled={disabled}
       contentStyle={contentStyle}
@@ -41,49 +52,5 @@ function FormButton({
     </Button>
   );
 }
-
-{
-  /* <Button
-  onPress={handleSubmit(onSaveEdit)}
-  mode="contained"
-  buttonColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-  textColor={colorScheme === "dark" ? "black" : "white"}
->
-  Save
-</Button>; */
-}
-
-{
-  /* <Button
-  loading={isLoading}
-  onPress={handleSubmit(onAddWarranty)}
-  mode="contained"
-  buttonColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-  textColor={colorScheme === "dark" ? "black" : "white"}
->
-  {isLoading ? "Adding Warranty" : "Add Warranty"}
-</Button>; */
-}
-
-{
-  /* <Button
-  buttonColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-  textColor={colorScheme === "dark" ? "black" : "white"}
-  mode="contained"
-  onPress={handleSubmit(OnRegister)}
-  disabled={signUpDisabled}
->
-  Sign Up
-</Button>; */
-}
-
-//  <Button
-//    onPress={() => setIsEditable(true)}
-//    mode="contained"
-//    buttonColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-//    textColor={colorScheme === "dark" ? "black" : "white"}
-//  >
-//    Edit
-//  </Button>;
 
 export default FormButton;

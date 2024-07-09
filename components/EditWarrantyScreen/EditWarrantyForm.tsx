@@ -1,6 +1,7 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import {
+  Image,
   Platform,
   ScrollView,
   StyleSheet,
@@ -29,6 +30,8 @@ import { useEffect, useState } from "react";
 import { FirebaseError } from "firebase/app";
 import LoadingScreen from "@/app/screens/LoadingScreen";
 import SectionTitle from "../SectionTitle";
+import FormButton from "../FormComponents/FormButton";
+import VerticalDivider from "../VerticalDivider";
 
 const PRODUCT_NAME_FIELD_NAME = "productName";
 const DATE_FIELD_NAME = "dateOfPurchase";
@@ -61,6 +64,10 @@ type FormData = {
 
 function EditWarrantyForm({ productId }: { productId: string }) {
   const [isEditable, setIsEditable] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageUri, setImageUri] = useState("");
+  const params = useLocalSearchParams();
+  const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const router = useRouter();
@@ -86,7 +93,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
             let month = Number(dateParts[1]) - 1;
             let day = Number(dateParts[0]);
             let year = Number(dateParts[2]);
-
+            setImageUri(snapshot.val().imageUri);
             return {
               ...snapshot.val(),
               [DATE_FIELD_NAME]: new Date(year, month, day),
@@ -147,6 +154,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
       // }).format(new Date()),
       dateCreated: data.dateCreated,
       dateModified: new Date(),
+      imageUri: imageUri ? imageUri : "",
     };
     // Write the new post's data simultaneously in the posts list and the user's post list.
     const updates: { [key: string]: any } = {};
@@ -154,15 +162,32 @@ function EditWarrantyForm({ productId }: { productId: string }) {
       warrantyData;
 
     try {
-      // setIsLoading(true);
+      setIsLoading(true);
       await update(ref(database), updates);
     } catch (error) {
       console.log(error);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
       router.back();
     }
   }
+
+  useEffect(() => {
+    if (
+      Object.hasOwn(params, "imageUri") &&
+      params["imageUri"] !== "undefined"
+    ) {
+      setImageUri(params["imageUri"] as string);
+    }
+    // console.log(typeof params["imageUri"]);
+  }, [params]);
+
+  // useEffect(() => {
+  //   navigation.addListener("beforeRemove", () => {
+  //     //@ts-ignore
+  //     navigation.setParams({ imageUri: undefined });
+  //   });
+  // }, []);
 
   //Record purchases’ info (info: date, price, category (default and create your
   // own), warranty period (years), seller name, seller phone, seller email...)
@@ -217,12 +242,6 @@ function EditWarrantyForm({ productId }: { productId: string }) {
               priceFieldCompName={PRODUCT_PRICE_FIELD_NAME}
               editable={isEditable}
             />
-            {/* <CategoryDropdown
-        control={control}
-        componentName={CATEGORY_FIELD_NAME}
-        label="Category"
-        mode="outlined"
-      /> */}
             <TextField
               componentName={BRAND_FIELD_NAME}
               mode="outlined"
@@ -244,11 +263,82 @@ function EditWarrantyForm({ productId }: { productId: string }) {
               warrantyPeriodFieldCompName={WARRANTY_PERIOD_FIELD_NAME}
               editable={isEditable}
             />
-            {/* <View style={styles.dateOfPurchaseContainer}>
-        <Text style={styles.dateOfPurchaseText}>
-          Attach picture of receipt:{" "}
-        </Text>
-      </View> */}
+            <View style={styles.imagePreviewContainer}>
+              <Text style={styles.attachPictureText}>Receipt Image:</Text>
+              {!imageUri && isEditable ? (
+                <FormButton
+                  text={"Select Picture"}
+                  mode="contained"
+                  style={styles.selectPictureBtn}
+                  onPress={() => {
+                    // router.push("/screens/CameraScreen");
+                    router.navigate({
+                      pathname: `/screens/CameraScreen`,
+                      params: {
+                        previousScreenName: "EditWarrantyScreen",
+                        productId,
+                      },
+                    });
+                  }}
+                />
+              ) : null}
+              {!imageUri && !isEditable ? (
+                <Text
+                  style={[
+                    styles.noImageText,
+                    {
+                      color: colorScheme === "light" ? "#F63428" : "#FF3B30",
+                    },
+                  ]}
+                >
+                  No Image Provided
+                </Text>
+              ) : null}
+            </View>
+            {imageUri && isEditable ? (
+              <View style={styles.imageContainer}>
+                <Image
+                  style={styles.image}
+                  source={{ uri: imageUri }}
+                  resizeMode="cover"
+                />
+                <View style={styles.imagePreviewBtnContainer}>
+                  <FormButton
+                    text={"Change Picture"}
+                    mode="contained"
+                    style={styles.selectPictureBtn}
+                    onPress={() => {
+                      router.navigate({
+                        pathname: `/screens/CameraScreen`,
+                        params: {
+                          previousScreenName: "EditWarrantyScreen",
+                          productId,
+                        },
+                      });
+                    }}
+                  />
+                  <FormButton
+                    text={"Remove Picture"}
+                    mode="contained"
+                    style={styles.selectPictureBtn}
+                    onPress={() => {
+                      setImageUri("");
+                    }}
+                  />
+                </View>
+              </View>
+            ) : null}
+
+            {imageUri && !isEditable ? (
+              <View style={styles.imageNotEditableContainer}>
+                <Image
+                  style={styles.imageNotEditable}
+                  source={{ uri: imageUri }}
+                  resizeMode="cover"
+                />
+              </View>
+            ) : null}
+
             <SectionTitle
               text="Store Details"
               style={styles.storeDetailsTitle}
@@ -261,13 +351,6 @@ function EditWarrantyForm({ productId }: { productId: string }) {
               placeholderText="Apple Store"
               editable={isEditable}
             />
-            {/* <TextField
-        componentName={STORE_LOCATION_FIELD_NAME}
-        control={control}
-        mode={"outlined"}
-        label={"Location"}
-        placeholderText="Mall of the Emirates"
-      /> */}
             <EmailField
               control={control}
               componentName={STORE_EMAIL_FIELD_NAME}
@@ -290,23 +373,30 @@ function EditWarrantyForm({ productId }: { productId: string }) {
               editable={isEditable}
             />
             {isEditable ? (
-              <Button
-                onPress={handleSubmit(onSaveEdit)}
-                mode="contained"
-                buttonColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-                textColor={colorScheme === "dark" ? "black" : "white"}
-              >
-                Save
-              </Button>
+              <View style={styles.saveAndCancelBtnContainer}>
+                <FormButton
+                  text="Save"
+                  mode="contained"
+                  onPress={handleSubmit(onSaveEdit)}
+                  style={styles.saveBtn}
+                  isLoading={isLoading}
+                />
+                <VerticalDivider />
+                <FormButton
+                  text="Cancel"
+                  mode="contained"
+                  onPress={() => setIsEditable(false)}
+                  style={styles.cancelBtn}
+                  disabled={isLoading}
+                />
+              </View>
             ) : (
-              <Button
-                onPress={() => setIsEditable(true)}
+              <FormButton
+                text="Edit"
                 mode="contained"
-                buttonColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-                textColor={colorScheme === "dark" ? "black" : "white"}
-              >
-                Edit
-              </Button>
+                onPress={() => setIsEditable(true)}
+                style={styles.editBtn}
+              />
             )}
           </View>
         </ScrollView>
@@ -318,6 +408,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
 const styles = StyleSheet.create({
   fieldContainer: {
     gap: 20,
+    paddingBottom: 50,
   },
   productDetailsTitle: {
     color: "#1F41BB",
@@ -369,6 +460,59 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
     width: "100%",
+  },
+  imagePreviewContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  attachPictureText: {
+    fontSize: 17,
+    marginRight: 10,
+    fontWeight: Platform.OS === "ios" ? "500" : "bold",
+  },
+  selectPictureBtn: {
+    borderRadius: 10,
+  },
+  imageContainer: {
+    width: "100%",
+    height: 250,
+    flexDirection: "row",
+  },
+  imageNotEditableContainer: {
+    width: "100%",
+    height: 250,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  image: {
+    flex: 1,
+  },
+  imageNotEditable: {
+    width: "50%",
+  },
+  imagePreviewBtnContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+  },
+  noImageText: {
+    fontSize: 16,
+  },
+  saveAndCancelBtnContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 20,
+    gap: 20,
+  },
+  saveBtn: {
+    flex: 1,
+  },
+  editBtn: {
+    marginTop: 20,
+  },
+  cancelBtn: {
+    flex: 1,
   },
 });
 

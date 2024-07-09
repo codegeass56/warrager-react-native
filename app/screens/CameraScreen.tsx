@@ -1,7 +1,6 @@
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Alert,
   Linking,
   Platform,
   StyleSheet,
@@ -15,14 +14,16 @@ import {
   GestureUpdateEvent,
   PinchGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
-import { Button, IconButton, Text } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import ImagePreview from "../../components/ImagePreview";
 import { FlipType, manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import FormButton from "@/components/FormComponents/FormButton";
 import SectionTitle from "@/components/SectionTitle";
+import { useLocalSearchParams } from "expo-router";
 
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
+  const params = useLocalSearchParams();
   const [permissionStatus, setPermissionStatus] = useState<
     "granted" | "denied" | "undetermined"
   >("undetermined");
@@ -32,6 +33,10 @@ export default function CameraScreen() {
   const [lastZoom, setLastZoom] = useState(0);
   const [imageUri, setImageUri] = useState("");
   const [facing, setFacing] = useState<CameraType>("back");
+
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
 
   const onPinch = useCallback(
     (e: GestureUpdateEvent<PinchGestureHandlerEventPayload>) => {
@@ -76,12 +81,8 @@ export default function CameraScreen() {
 
   async function takePicture() {
     if (!cameraRef.current) return;
-    // const data = await cameraRef.current.takePictureAsync({
-    //   base64: true,
-    //   quality: 1,
-    // });
-    // setImageUri("data:image/jpg;base64," + data!.base64);
     let photo = await cameraRef.current.takePictureAsync();
+
     if (!photo) {
       console.log("Error taking picture");
       return;
@@ -140,7 +141,12 @@ export default function CameraScreen() {
   }
 
   return imageUri ? (
-    <ImagePreview imageUri={imageUri} onRetake={setImageUri} />
+    <ImagePreview
+      imageUri={imageUri}
+      onRetake={setImageUri}
+      previousScreenName={params["previousScreenName"] as string}
+      productId={params["productId"] as string}
+    />
   ) : (
     <GestureHandlerRootView style={styles.container}>
       <GestureDetector gesture={pinchGesture}>
@@ -184,9 +190,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    // alignItems: "center",
-    // padding: 20,
-    // gap: 20,
   },
   emptyView: {
     flex: 1,

@@ -17,6 +17,7 @@ import { ref, set } from "firebase/database";
 import EmailField from "../FormComponents/EmailField";
 import PasswordField from "../FormComponents/PasswordField";
 import FormButton from "../FormComponents/FormButton";
+import SectionTitle from "../SectionTitle";
 const randomMC = require("random-material-color");
 
 type Props = {
@@ -81,14 +82,15 @@ function RegistrationForm({ onLogin }: Props) {
 
   return (
     <View style={styles.fieldContainer}>
-      <Text
+      {/* <Text
         style={[
           styles.formTitle,
           { color: colorScheme === "dark" ? "#a9a5e2" : "#1F41BB" },
         ]}
       >
         Create your account
-      </Text>
+      </Text> */}
+      <SectionTitle text="Create your account" style={styles.formTitle} />
       <EmailField
         control={control}
         componentName="email"
@@ -135,19 +137,10 @@ function RegistrationForm({ onLogin }: Props) {
         label="Confirm Password"
         placeholderText="Retype your password"
       />
-      {/* <Button
-        buttonColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-        textColor={colorScheme === "dark" ? "black" : "white"}
-        mode="contained"
-        onPress={handleSubmit(OnRegister)}
-        // disabled={signUpDisabled}
-      >
-        Sign Up
-      </Button> */}
       <FormButton
-        text="Sign Up"
         mode="contained"
         onPress={handleSubmit(OnRegister)}
+        text="Sign Up"
         disabled={signUpDisabled}
       />
       {isLoading && (
@@ -163,13 +156,7 @@ function RegistrationForm({ onLogin }: Props) {
       )}
       <View style={styles.loginLinkContainer}>
         <Text>Already have an account?</Text>
-        <Button
-          textColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-          mode="text"
-          onPress={() => onLogin(false)}
-        >
-          Login
-        </Button>
+        <FormButton text="Login" mode="text" onPress={() => onLogin(false)} />
       </View>
     </View>
   );

@@ -33,6 +33,7 @@ declare global {
     warrantyDurationType: string;
     warrantyPeriod: string;
     dateModified: string;
+    imageUri: string;
   };
 
   type TextFieldProps = {

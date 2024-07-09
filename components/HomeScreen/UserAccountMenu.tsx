@@ -1,12 +1,6 @@
 import { useState } from "react";
-import {
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from "react-native";
-import { Avatar, Divider, Menu } from "react-native-paper";
+import { StyleProp, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Avatar, Menu } from "react-native-paper";
 
 type Props = {
   avatarLabel: string;
@@ -42,9 +36,6 @@ function UserAccountMenu({
         }
         anchorPosition="bottom"
       >
-        {/*//TODO: Implement logic to edit profile */}
-        {/* <Menu.Item onPress={() => {}} title="Edit Profile" />
-        <Divider /> */}
         <Menu.Item onPress={onLogout} title="Logout" />
       </Menu>
     </View>

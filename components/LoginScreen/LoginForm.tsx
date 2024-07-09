@@ -101,9 +101,8 @@ function LoginForm({ onRegister }: Props) {
         mode="outlined"
         label="Email"
         placeholderText="Enter your email"
-        autoFocus={false}
+        autoFocus={true}
       />
-
       <PasswordField
         componentName={PASSWORD_FIELD_NAME}
         control={control}
@@ -117,16 +116,6 @@ function LoginForm({ onRegister }: Props) {
         label="Enter Password"
         placeholderText="Enter your password"
       />
-
-      {/* <Button
-        buttonColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-        textColor={colorScheme === "dark" ? "black" : "white"}
-        mode="contained"
-        onPress={handleSubmit(onLogin)}
-        disabled={signInDisabled}
-      >
-        Login
-      </Button> */}
       <FormButton
         text="Login"
         mode="contained"
@@ -144,14 +133,11 @@ function LoginForm({ onRegister }: Props) {
 
       <View style={styles.registerLinkContainer}>
         <Text>Don't have an account?</Text>
-
-        <Button
+        <FormButton
+          text="Sign up"
           mode="text"
-          textColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
           onPress={() => onRegister(true)}
-        >
-          Sign up
-        </Button>
+        />
       </View>
     </View>
   );

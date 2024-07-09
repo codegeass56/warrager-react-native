@@ -1,12 +1,6 @@
 import { useState } from "react";
-import {
-  FlatList,
-  Platform,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from "react-native";
-import { Button, Icon, Menu } from "react-native-paper";
+import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
+import { Button, Divider, Icon, Menu } from "react-native-paper";
 import Product from "./Product";
 
 type Props = {
@@ -88,20 +82,20 @@ export default function ProductList({
             productName={item.productName}
             brand={item.productBrand}
             warrantyPeriod={item.warrantyPeriod}
-            // imgSrc={item.imgSrc}
+            imgSrc={item.imageUri ? item.imageUri : undefined}
             dateOfPurchase={item.dateOfPurchase}
             expiryDate={item.dateOfExpiry}
             warrantyDurationType={item.warrantyDurationType}
             price={item.productPrice}
             currencyType={item.currencyType}
             closeSwipeable={closeSwipeable}
-            // purchaseLocation={item.purchaseLocation}
             onRefresh={onRefresh}
           />
         )}
         keyExtractor={(item) => item.id}
         onRefresh={onRefresh}
         refreshing={refreshing}
+        contentContainerStyle={styles.divider}
       />
     </>
   );
@@ -114,4 +108,5 @@ const styles = StyleSheet.create({
   sortDropdownContainer: {
     alignSelf: "flex-end",
   },
+  divider: { gap: 10 },
 });

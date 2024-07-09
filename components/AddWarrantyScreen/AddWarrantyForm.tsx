@@ -15,7 +15,7 @@ import DatePicker from "../FormComponents/DatePicker";
 import ProductPriceInput from "./ProductPriceInput";
 import WarrantyPeriodInput from "./WarrantyPeriodInput";
 import StoreContactInput from "./StoreContactInput";
-import { child, push, ref, set, update } from "firebase/database";
+import { child, push, ref, update } from "firebase/database";
 import { auth, database } from "@/firebaseConfig";
 import { useEffect, useState } from "react";
 import SectionTitle from "../SectionTitle";
@@ -83,16 +83,10 @@ function AddWarrantyForm() {
   });
 
   useEffect(() => {
-    console.log(params);
-
     if (params["imageUri"] !== "undefined") {
       setImageUri(params["imageUri"] as string);
     }
   }, [params]);
-
-  useEffect(() => {
-    console.log(imageUri);
-  }, [imageUri]);
 
   useEffect(() => {
     navigation.addListener("beforeRemove", () => {
@@ -142,11 +136,9 @@ function AddWarrantyForm() {
       [STORE_NAME_FIELD_NAME]: data[STORE_NAME_FIELD_NAME],
       [STORE_EMAIL_FIELD_NAME]: data[STORE_EMAIL_FIELD_NAME],
       [STORE_CONTACT_FIELD_NAME]: data[STORE_CONTACT_FIELD_NAME],
-      // dateCreated: new Intl.DateTimeFormat("en-GB", {
-      //   timeZone: Localization.getCalendars()[0].timeZone!,
-      // }).format(new Date()),
       dateCreated: new Date(),
       dateModified: new Date(),
+      imageUri: imageUri ? imageUri : "",
     };
     // Write the new post's data simultaneously in the posts list and the user's post list.
     const updates: { [key: string]: any } = {};
@@ -165,8 +157,6 @@ function AddWarrantyForm() {
     }
   }
 
-  //Record purchases’ info (info: date, price, category (default and create your own), warranty period (years), seller name, seller
-  // phone, seller email...)
   return (
     <View style={styles.fieldContainer}>
       <SectionTitle text="Product Details" style={styles.productDetailsTitle} />
@@ -217,7 +207,7 @@ function AddWarrantyForm() {
         durationDropdownCompName={WARRANTY_DURATION_TYPE_FIELD_NAME}
         warrantyPeriodFieldCompName={WARRANTY_PERIOD_FIELD_NAME}
       />
-      <View style={styles.dateOfPurchaseContainer}>
+      <View style={styles.imagePreviewContainer}>
         <Text style={styles.attachPictureText}>Attach picture of receipt:</Text>
         {!imageUri ? (
           <FormButton
@@ -287,15 +277,13 @@ function AddWarrantyForm() {
           errors,
         }}
       />
-      <Button
-        loading={isLoading}
+      <FormButton
+        isLoading={isLoading}
         onPress={handleSubmit(onAddWarranty)}
         mode="contained"
-        buttonColor={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
-        textColor={colorScheme === "dark" ? "black" : "white"}
-      >
-        {isLoading ? "Adding Warranty" : "Add Warranty"}
-      </Button>
+        text={isLoading ? "Adding Warranty" : "Add Warranty"}
+        style={styles.addWarrantyBtn}
+      />
     </View>
   );
 }
@@ -303,6 +291,7 @@ function AddWarrantyForm() {
 const styles = StyleSheet.create({
   fieldContainer: {
     gap: 20,
+    paddingBottom: 50,
   },
   productDetailsTitle: {
     color: "#1F41BB",
@@ -326,6 +315,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
     fontWeight: Platform.OS === "ios" ? "500" : "bold",
   },
+  imagePreviewContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   attachPictureText: {
     fontSize: 17,
     marginRight: 10,
@@ -335,7 +328,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   imageContainer: {
-    // flex: 10,
     width: "100%",
     height: 250,
     flexDirection: "row",
@@ -348,6 +340,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 20,
+  },
+  addWarrantyBtn: {
+    marginTop: 20,
   },
 });
 

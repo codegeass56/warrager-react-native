@@ -10,16 +10,6 @@ type Props = {
 function Filter({ products, onFilter }: Props) {
   return (
     <View style={styles.container}>
-      {/* <Button
-        mode="contained"
-        icon={"filter"}
-        style={styles.filterBtnStyle}
-        onPress={() => {}}
-        contentStyle={styles.filterBtnSize}
-        buttonColor="#1F41BB"
-      >
-        Filter
-      </Button> */}
       <View style={styles.verticalDivider} />
       <ScrollView
         horizontal
@@ -27,16 +17,6 @@ function Filter({ products, onFilter }: Props) {
         showsHorizontalScrollIndicator={false}
         scrollEnabled
       >
-        {/* {uniqueProducts.map((p) => (
-          <Chip
-            key={p.id}
-            onPress={() => {
-              onFilter(p.productBrand);
-            }}
-          >
-            {p.productBrand}
-          </Chip>
-        ))} */}
         {products.map((p) => (
           <MaterialChip key={p.id} onSelect={onFilter} brand={p.productBrand} />
         ))}

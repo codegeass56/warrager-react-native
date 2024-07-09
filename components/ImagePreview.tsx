@@ -10,13 +10,21 @@ import VerticalDivider from "./VerticalDivider";
 import { IconButton, useTheme } from "react-native-paper";
 import FormButton from "./FormComponents/FormButton";
 import { router, useNavigation } from "expo-router";
+import { useEffect } from "react";
 
 type Props = {
   imageUri: string;
   onRetake: React.Dispatch<React.SetStateAction<string>>;
+  previousScreenName: string;
+  productId?: string;
 };
 
-function ImagePreview({ imageUri, onRetake }: Props) {
+function ImagePreview({
+  imageUri,
+  onRetake,
+  previousScreenName,
+  productId,
+}: Props) {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const theme = useTheme();
@@ -24,6 +32,10 @@ function ImagePreview({ imageUri, onRetake }: Props) {
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj\
     [ayj[j[fQayWCoeoeaya} j[ayfQa{oLj ? j[WVj[ayayj[fQoff7azayj[ayj[j[\
     ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+
+  useEffect(() => {
+    console.log(productId);
+  }, [productId]);
 
   return (
     <View
@@ -62,10 +74,17 @@ function ImagePreview({ imageUri, onRetake }: Props) {
             onPress={() => {
               // Pass and merge params back to home screen
               // router.push("/AddWarrantyScreen");
-              router.navigate({
-                pathname: "/screens/home/add-warranty/AddWarrantyScreen",
-                params: { imageUri: imageUri },
-              });
+              if (previousScreenName === "AddWarrantyScreen") {
+                router.navigate({
+                  pathname: "/screens/home/add-warranty/AddWarrantyScreen",
+                  params: { imageUri: imageUri },
+                });
+              } else if (previousScreenName === "EditWarrantyScreen") {
+                router.navigate({
+                  pathname: `/screens/home/edit-warranty/${productId}`,
+                  params: { imageUri: imageUri },
+                });
+              }
             }}
             mode="contained"
             style={styles.doneBtn}

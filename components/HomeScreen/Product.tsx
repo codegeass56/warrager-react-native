@@ -1,21 +1,15 @@
 import { useRouter } from "expo-router";
-import {
-  Animated,
-  Image,
-  Pressable,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Image, StyleSheet, useColorScheme, View } from "react-native";
 import {
   GestureHandlerRootView,
   Swipeable,
 } from "react-native-gesture-handler";
-import { Button, Icon, IconButton, Text, useTheme } from "react-native-paper";
+import { Icon, IconButton, Text, useTheme } from "react-native-paper";
 import VerticalDivider from "../VerticalDivider";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { ref, update } from "firebase/database";
 import { auth, database } from "@/firebaseConfig";
+import SectionTitle from "../SectionTitle";
 
 type Props = {
   imgSrc?: string;
@@ -34,7 +28,7 @@ type Props = {
 };
 
 export default function Product({
-  imgSrc = "https://picsum.photos/200",
+  imgSrc,
   brand,
   productName,
   dateOfPurchase,
@@ -112,11 +106,28 @@ export default function Product({
         overshootFriction={5}
       >
         <View style={styles.container}>
-          <Image
-            source={{ uri: imgSrc }}
-            style={styles.image}
-            resizeMode="cover"
-          />
+          {imgSrc ? (
+            <Image
+              source={{ uri: imgSrc }}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          ) : (
+            <View
+              style={[
+                styles.noImageContainer,
+                { backgroundColor: theme.colors.onSecondary },
+              ]}
+            >
+              <View style={styles.noImage}>
+                <SectionTitle
+                  text="No Image Provided"
+                  style={styles.noImageText}
+                />
+                <Icon source={"close"} size={40} color="red" />
+              </View>
+            </View>
+          )}
           <VerticalDivider />
           <View
             style={[
@@ -153,9 +164,22 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     overflow: "scroll",
     width: "100%",
-    // height: 300,
+    height: 300,
   },
   image: { flex: 1 },
+  noImageContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noImage: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noImageText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   productDetails: {
     justifyContent: "center",
     gap: 10,
@@ -173,7 +197,6 @@ const styles = StyleSheet.create({
   rightActions: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "yellow",
   },
   editIcon: {
     height: "100%",

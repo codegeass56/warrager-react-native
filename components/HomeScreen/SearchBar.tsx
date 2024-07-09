@@ -13,7 +13,7 @@ type Props = {
 
 export default function SearchBar({ control }: Props) {
   return (
-    <View style={styles.container}>
+    <View>
       <Controller
         name="search"
         control={control}
@@ -32,15 +32,6 @@ export default function SearchBar({ control }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    // width: "100%",
-  },
-  searchContainer: {
-    backgroundColor: "green",
-    // width: "100%",
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
   searchbar: {
     borderRadius: 10,
   },
