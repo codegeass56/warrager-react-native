@@ -1,24 +1,14 @@
-import { auth, database } from "@/firebaseConfig";
-import { useRouter } from "expo-router";
+import { auth } from "@/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Platform, StyleSheet, useColorScheme, View } from "react-native";
-import {
-  Button,
-  TextInput,
-  Text,
-  HelperText,
-  ActivityIndicator,
-  TextInputProps,
-} from "react-native-paper";
+import { Text, ActivityIndicator, TextInputProps } from "react-native-paper";
 import { FirebaseError } from "firebase/app";
-import { ref, set } from "firebase/database";
 import EmailField from "../FormComponents/EmailField";
 import PasswordField from "../FormComponents/PasswordField";
 import FormButton from "../FormComponents/FormButton";
 import SectionTitle from "../SectionTitle";
-const randomMC = require("random-material-color");
 
 type Props = {
   onLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -50,7 +40,6 @@ function RegistrationForm({ onLogin }: Props) {
   });
 
   async function OnRegister(data: FormData) {
-    console.log(data);
     try {
       setSignUpError("");
       setIsLoading(true);
@@ -82,14 +71,6 @@ function RegistrationForm({ onLogin }: Props) {
 
   return (
     <View style={styles.fieldContainer}>
-      {/* <Text
-        style={[
-          styles.formTitle,
-          { color: colorScheme === "dark" ? "#a9a5e2" : "#1F41BB" },
-        ]}
-      >
-        Create your account
-      </Text> */}
       <SectionTitle text="Create your account" style={styles.formTitle} />
       <EmailField
         control={control}

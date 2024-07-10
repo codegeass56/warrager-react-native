@@ -9,12 +9,14 @@ import DatePicker from "../FormComponents/DatePicker";
 import ProductPriceInput from "./ProductPriceInput";
 import WarrantyPeriodInput from "./WarrantyPeriodInput";
 import StoreContactInput from "./StoreContactInput";
-import { child, push, ref, update } from "firebase/database";
-import { auth, database } from "@/firebaseConfig";
+import { child, push, ref as dbRefMethod, update } from "firebase/database";
+import { auth, database, storage } from "@/firebaseConfig";
 import { useEffect, useState } from "react";
 import SectionTitle from "../SectionTitle";
 import FormButton from "../FormComponents/FormButton";
 import { useNavigation } from "expo-router";
+import { getDownloadURL, uploadBytes } from "firebase/storage";
+import { ref as storageRefMethod } from "firebase/storage";
 
 const PRODUCT_NAME_FIELD_NAME = "productName";
 const DATE_FIELD_NAME = "dateOfPurchase";
@@ -87,6 +89,17 @@ function AddWarrantyForm() {
     });
   }, []);
 
+  // async function uploadImage(uri: string, productKey: string) {
+  //   const response = await fetch(uri);
+  //   const blob = await response.blob();
+  //   let ref = storageRef(storage, `${currentUser?.uid}/images/` + productKey);
+
+  // 'file' comes from the Blob or File API
+  //   uploadBytes(ref, blob).then((snapshot) => {
+  //     console.log("Uploaded a blob or file!");
+  //   });
+  // }
+
   async function onAddWarranty(data: FormData) {
     //Create deep copy of date input
     const dateOfPurchase = new Date(data[DATE_FIELD_NAME].getTime());
@@ -110,7 +123,9 @@ function AddWarrantyForm() {
         );
         break;
     }
-    const newProductWarrantyKey = push(child(ref(database), "posts")).key;
+    const newProductWarrantyKey = push(
+      child(dbRefMethod(database), "warranties")
+    ).key;
     const warrantyData = {
       [PRODUCT_NAME_FIELD_NAME]: data[PRODUCT_NAME_FIELD_NAME],
       [DATE_FIELD_NAME]: new Intl.DateTimeFormat("en-GB", {
@@ -130,17 +145,36 @@ function AddWarrantyForm() {
       [STORE_CONTACT_FIELD_NAME]: data[STORE_CONTACT_FIELD_NAME],
       dateCreated: new Date(),
       dateModified: new Date(),
-      imageUri: imageUri ? imageUri : "",
+      imageUrl: "",
     };
-
-    const updates: { [key: string]: any } = {};
-    updates[
-      "/users/" + currentUser?.uid + "/warranties/" + newProductWarrantyKey
-    ] = warrantyData;
 
     try {
       setIsLoading(true);
-      await update(ref(database), updates);
+      let storageRef = storageRefMethod(
+        storage,
+        `${currentUser?.uid}/images/${newProductWarrantyKey}`
+      );
+
+      if (imageUri !== "") {
+        const response = await fetch(imageUri);
+        const blob = await response.blob();
+
+        await uploadBytes(storageRef, blob);
+        const imageUrl = await getDownloadURL(
+          storageRefMethod(
+            storage,
+            `${currentUser?.uid}/images/${newProductWarrantyKey}`
+          )
+        );
+
+        warrantyData["imageUrl"] = imageUrl;
+      }
+      const updates: { [key: string]: any } = {};
+      updates[
+        "/users/" + currentUser?.uid + "/warranties/" + newProductWarrantyKey
+      ] = warrantyData;
+
+      await update(dbRefMethod(database), updates);
     } catch (error) {
       console.log(error);
     } finally {

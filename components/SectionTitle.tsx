@@ -1,4 +1,4 @@
-import { StyleProp, StyleSheet, TextStyle, useColorScheme } from "react-native";
+import { StyleProp, TextStyle, useColorScheme } from "react-native";
 import { Text } from "react-native-paper";
 
 type Props = {

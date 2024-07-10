@@ -16,32 +16,73 @@ const randomMC = require("random-material-color");
 // SplashScreen.preventAutoHideAsync();
 
 //Done:
-// Editing the warranty
-// Back button to go back to home screen
-// Dark Mode
-// Refreshing the list when returning back from the save screen (need to fix the list getting stuck on refresh)
-// Deleting the warranty
-// Swipe gesture to edit or delete
-// Saving the image to Firebase and retrieving it on the home screen
+
+/*
+  Editing the warranty.
+
+  Back button to go back to home screen.
+
+  Dark Mode.
+
+  Refreshing the list when returning back from the save screen (need to fix the
+  list getting stuck on refresh).
+
+  Deleting the warranty.
+
+  Swipe gesture to edit or delete.
+
+  Saving the image to Firebase and retrieving it on the home screen.
+
+  Implement saving the warranty in the EditWarrantyScreen similarly as in
+  AddWarrantyScreen.
+
+  Implement deleting the image from storage after deleting warranty.
+*/
 
 // Core Features:
+/*
+ */
+
+// Issues:
+/*
+  Fix the image preview not showing in the forms on Android.
+
+  Increase image preview height in AddWarrantyScreen and EditWarrantyScreen.
+
+  Fix render error on adding new warranty. Error seems to be in Product.tsx.
+*/
 
 //Testing:
-// Test different user flows (with existing account and with new account). Check for any errors.
-/* Fix render error on adding new warranty. Error seems to be in Product.tsx.
- Happens the very first time after account creation.*/
-// Need to find a robust method of loading different screens in the index file of expo router
+/*
+  Test different user flows(with existing account and with new
+  account). Check for any errors.
+  
+  Need to find a robust method of loading different screens in the index file
+  of expo router
+*/
 
 // QOL Features:
-// Improving the UI
-/* Adding a bouncing arrow pointing to the add
- warranty button on the home screen when no products are found*/
-// Traversing form components with the keyboard 'Next' button
+/*
+  Improving the UI. 
+
+  Adding a bouncing arrow pointing to the add warranty button on the home screen
+  when no products are found.
+
+  Traversing form components with the keyboard 'Next' button.
+*/
 
 // Future:
-// Push Notifications for expiring warranties
-// User Settings for photo and name
-// App settings with dark mode options for system and manual toggle
+/*
+  Push Notifications for expiring warranties.
+
+  User Settings for photo and name.
+
+  App settings with dark mode options for system and manual toggle.
+
+  Select receipt photo from device gallery.
+
+  Image carousel with multiple warranty images.
+*/
 
 export default function RootLayout() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);

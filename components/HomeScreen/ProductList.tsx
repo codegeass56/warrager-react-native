@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
-import { Button, Divider, Icon, Menu } from "react-native-paper";
+import { Button, Icon, Menu } from "react-native-paper";
 import Product from "./Product";
 
 type Props = {
@@ -82,7 +82,7 @@ export default function ProductList({
             productName={item.productName}
             brand={item.productBrand}
             warrantyPeriod={item.warrantyPeriod}
-            imgSrc={item.imageUri ? item.imageUri : undefined}
+            imgSrc={item.imageUrl ? item.imageUrl : undefined}
             dateOfPurchase={item.dateOfPurchase}
             expiryDate={item.dateOfExpiry}
             warrantyDurationType={item.warrantyDurationType}

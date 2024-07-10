@@ -1,14 +1,9 @@
-// import Button from "./Button";
-
-import React, { useState } from "react";
 import { Control, Controller } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
-import { Searchbar, TextInput } from "react-native-paper";
+import { Searchbar } from "react-native-paper";
 
 type Props = {
-  control: Control<{
-    search: string;
-  }>;
+  control: Control<{ search: string }>;
 };
 
 export default function SearchBar({ control }: Props) {

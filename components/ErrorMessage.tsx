@@ -2,7 +2,6 @@ import { StyleSheet, useColorScheme, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
 function ErrorMessage({ message }: { message: string }) {
-  const colorScheme = useColorScheme();
   const theme = useTheme();
   return (
     <View style={styles.failedMessageContainer}>

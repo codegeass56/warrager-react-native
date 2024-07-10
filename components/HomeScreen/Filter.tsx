@@ -1,5 +1,4 @@
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Button, Chip } from "react-native-paper";
 import MaterialChip from "../MaterialChip";
 
 type Props = {

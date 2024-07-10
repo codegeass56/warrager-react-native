@@ -1,6 +1,5 @@
 import { Control } from "react-hook-form";
 import FormDropdown from "../FormComponents/FormDropdown";
-import { DropDownPropsInterface } from "react-native-paper-dropdown";
 
 type Props = {
   control: Control<any>;

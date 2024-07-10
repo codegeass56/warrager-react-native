@@ -1,5 +1,5 @@
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   Linking,
   Platform,
@@ -68,16 +68,22 @@ export default function CameraScreen() {
     if (!cameraRef.current) return;
     const pictureSizes =
       await cameraRef.current.getAvailablePictureSizesAsync();
+    console.log(pictureSizes);
+
     if (Platform.OS === "android") {
-      setPictureSize(pictureSizes[0]);
+      // setPictureSize(pictureSizes[0]);
+      setPictureSize("1920x1080");
     } else {
-      setPictureSize("High");
+      // setPictureSize("Low");
+      setPictureSize("1920x1080");
     }
   }
 
   async function takePicture() {
     if (!cameraRef.current) return;
-    let photo = await cameraRef.current.takePictureAsync();
+    let photo = await cameraRef.current.takePictureAsync({
+      quality: 1,
+    });
 
     if (!photo) {
       console.log("Error taking picture");
@@ -136,7 +142,7 @@ export default function CameraScreen() {
     );
   }
 
-  return imageUri ? (
+  return imageUri !== "" ? (
     <ImagePreview
       imageUri={imageUri}
       onRetake={setImageUri}

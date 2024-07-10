@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { GestureResponderEvent } from "react-native";
 import { Chip } from "react-native-paper";
 
 type Props = {
   brand: string;
-  //   onSelect: (e: GestureResponderEvent) => void;
   onSelect: React.Dispatch<React.SetStateAction<BrandObj>>;
 };
 

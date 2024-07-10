@@ -7,8 +7,9 @@ import {
 import { Icon, IconButton, Text, useTheme } from "react-native-paper";
 import VerticalDivider from "../VerticalDivider";
 import { useRef } from "react";
-import { ref, update } from "firebase/database";
-import { auth, database } from "@/firebaseConfig";
+import { ref as dbRefMethod, update } from "firebase/database";
+import { auth, database, storage } from "@/firebaseConfig";
+import { deleteObject, ref as storageRefMethod } from "firebase/storage";
 import SectionTitle from "../SectionTitle";
 
 type Props = {
@@ -46,6 +47,7 @@ export default function Product({
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const swipeableRef = useRef<Swipeable>(null);
+  const currentUser = auth.currentUser;
 
   if (closeSwipeable) {
     swipeableRef.current?.close();
@@ -54,9 +56,14 @@ export default function Product({
   async function onDelete() {
     const updates: { [key: string]: any } = {};
     updates[`users/${auth.currentUser?.uid}/warranties/${productId}`] = null;
-
+    let storageRef = storageRefMethod(
+      storage,
+      `${currentUser?.uid}/images/${productId}`
+    );
     try {
-      await update(ref(database), updates);
+      const updateTask = update(dbRefMethod(database), updates);
+      const deletionTask = deleteObject(storageRef);
+      await Promise.all([updateTask, deletionTask]);
       onRefresh();
     } catch (error) {
       //TODO: Deal with deletion error

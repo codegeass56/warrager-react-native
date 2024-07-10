@@ -1,16 +1,9 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from "react-native";
+import { StyleSheet, useColorScheme, View } from "react-native";
 import { Image } from "expo-image";
 import VerticalDivider from "./VerticalDivider";
-import { IconButton, useTheme } from "react-native-paper";
+import { useTheme } from "react-native-paper";
 import FormButton from "./FormComponents/FormButton";
-import { router, useNavigation } from "expo-router";
-import { useEffect } from "react";
+import { router } from "expo-router";
 
 type Props = {
   imageUri: string;
@@ -25,17 +18,12 @@ function ImagePreview({
   previousScreenName,
   productId,
 }: Props) {
-  const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj\
     [ayj[j[fQayWCoeoeaya} j[ayfQa{oLj ? j[WVj[ayayj[fQoff7azayj[ayj[j[\
     ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
-
-  useEffect(() => {
-    console.log(productId);
-  }, [productId]);
 
   return (
     <View
@@ -73,7 +61,6 @@ function ImagePreview({
             text="Done"
             onPress={() => {
               // Pass and merge params back to home screen
-              // router.push("/AddWarrantyScreen");
               if (previousScreenName === "AddWarrantyScreen") {
                 router.navigate({
                   pathname: "/screens/home/add-warranty/AddWarrantyScreen",

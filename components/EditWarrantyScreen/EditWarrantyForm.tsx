@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import {
   Image,
@@ -8,14 +8,7 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  Icon,
-  PaperProvider,
-  Text,
-  useTheme,
-} from "react-native-paper";
+import { PaperProvider, Text, useTheme } from "react-native-paper";
 import * as Localization from "expo-localization";
 import TextField from "../FormComponents/TextField";
 import EmailField from "../FormComponents/EmailField";
@@ -23,15 +16,19 @@ import DatePicker from "../FormComponents/DatePicker";
 import ProductPriceInput from "../AddWarrantyScreen/ProductPriceInput";
 import WarrantyPeriodInput from "../AddWarrantyScreen/WarrantyPeriodInput";
 import StoreContactInput from "../AddWarrantyScreen/StoreContactInput";
-import CategoryDropdown from "../AddWarrantyScreen/CategoryDropdown";
-import { child, get, push, ref, set, update } from "firebase/database";
-import { auth, database } from "@/firebaseConfig";
+import { child, get, ref as dbRefMethod, update } from "firebase/database";
+import { auth, database, storage } from "@/firebaseConfig";
 import { useEffect, useState } from "react";
-import { FirebaseError } from "firebase/app";
 import LoadingScreen from "@/app/screens/LoadingScreen";
 import SectionTitle from "../SectionTitle";
 import FormButton from "../FormComponents/FormButton";
 import VerticalDivider from "../VerticalDivider";
+import {
+  getDownloadURL,
+  uploadBytes,
+  ref as storageRefMethod,
+  deleteObject,
+} from "firebase/storage";
 
 const PRODUCT_NAME_FIELD_NAME = "productName";
 const DATE_FIELD_NAME = "dateOfPurchase";
@@ -81,7 +78,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
     defaultValues: () =>
       get(
         child(
-          ref(database),
+          dbRefMethod(database),
           `users/${currentUser?.uid}/warranties/${productId}`
         )
       )
@@ -92,7 +89,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
             let month = Number(dateParts[1]) - 1;
             let day = Number(dateParts[0]);
             let year = Number(dateParts[2]);
-            setImageUri(snapshot.val().imageUri);
+            setImageUri(snapshot.val().imageUrl);
             return {
               ...snapshot.val(),
               [DATE_FIELD_NAME]: new Date(year, month, day),
@@ -148,15 +145,31 @@ function EditWarrantyForm({ productId }: { productId: string }) {
       [STORE_CONTACT_FIELD_NAME]: data[STORE_CONTACT_FIELD_NAME],
       dateCreated: data.dateCreated,
       dateModified: new Date(),
-      imageUri: imageUri ? imageUri : "",
+      imageUrl: "",
     };
-    const updates: { [key: string]: any } = {};
-    updates["/users/" + currentUser?.uid + "/warranties/" + productId] =
-      warrantyData;
 
     try {
       setIsLoading(true);
-      await update(ref(database), updates);
+      let storageRef = storageRefMethod(
+        storage,
+        `${currentUser?.uid}/images/${productId}`
+      );
+      if (imageUri !== "") {
+        const response = await fetch(imageUri);
+        const blob = await response.blob();
+
+        await uploadBytes(storageRef, blob);
+        const imageUrl = await getDownloadURL(storageRef);
+
+        warrantyData["imageUrl"] = imageUrl;
+      } else {
+        await deleteObject(storageRef);
+      }
+      const updates: { [key: string]: any } = {};
+      updates["/users/" + currentUser?.uid + "/warranties/" + productId] =
+        warrantyData;
+
+      await update(dbRefMethod(database), updates);
     } catch (error) {
       console.log(error);
     } finally {

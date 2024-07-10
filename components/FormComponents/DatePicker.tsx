@@ -2,15 +2,8 @@ import { Control, Controller } from "react-hook-form";
 import DateTimePicker, {
   DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
-import {
-  Platform,
-  StyleProp,
-  StyleSheet,
-  TextStyle,
-  useColorScheme,
-  View,
-} from "react-native";
-import { Button, MD3LightTheme, Text } from "react-native-paper";
+import { Platform, StyleSheet, useColorScheme } from "react-native";
+import { Button, Text } from "react-native-paper";
 import * as Localization from "expo-localization";
 type Props = {
   componentName: string;
