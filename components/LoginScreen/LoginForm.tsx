@@ -55,12 +55,10 @@ function LoginForm({ onRegister }: Props) {
 
   const onLogin = async (data: FormData) => {
     Keyboard.dismiss();
-    console.log(data);
     try {
       setLoginError("");
       setIsLoading(true);
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      console.log("User signed in");
     } catch (e) {
       if (e instanceof FirebaseError) {
         let errorCode = e.code;

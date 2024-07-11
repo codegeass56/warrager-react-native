@@ -63,7 +63,11 @@ export default function Product({
     try {
       const updateTask = update(dbRefMethod(database), updates);
       const deletionTask = deleteObject(storageRef);
-      await Promise.all([updateTask, deletionTask]);
+      if (imgSrc) {
+        await Promise.all([updateTask, deletionTask]);
+      } else {
+        await updateTask;
+      }
       onRefresh();
     } catch (error) {
       //TODO: Deal with deletion error

@@ -44,7 +44,6 @@ function RegistrationForm({ onLogin }: Props) {
       setSignUpError("");
       setIsLoading(true);
       await createUserWithEmailAndPassword(auth, data.email, data.password);
-      console.log("User account created & signed in");
       onLogin(false);
     } catch (e) {
       if (e instanceof FirebaseError) {
