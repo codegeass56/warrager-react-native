@@ -227,7 +227,7 @@ function AddWarrantyForm() {
         <Text style={styles.attachPictureText}>Attach picture of receipt:</Text>
         {!imageUri ? (
           <FormButton
-            text={"Select Picture"}
+            text={"Take Picture"}
             mode="contained"
             style={styles.selectPictureBtn}
             onPress={() => {

@@ -264,7 +264,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
               <Text style={styles.attachPictureText}>Receipt Image:</Text>
               {!imageUri && isEditable ? (
                 <FormButton
-                  text={"Select Picture"}
+                  text={"Take Picture"}
                   mode="contained"
                   style={styles.selectPictureBtn}
                   onPress={() => {
