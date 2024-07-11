@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Image, StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, useColorScheme, View } from "react-native";
 import {
   GestureHandlerRootView,
   Swipeable,
@@ -10,6 +10,7 @@ import { useRef } from "react";
 import { ref as dbRefMethod, update } from "firebase/database";
 import { auth, database, storage } from "@/firebaseConfig";
 import { deleteObject, ref as storageRefMethod } from "firebase/storage";
+import { Image } from "expo-image";
 import SectionTitle from "../SectionTitle";
 
 type Props = {
@@ -121,7 +122,7 @@ export default function Product({
             <Image
               source={{ uri: imgSrc }}
               style={styles.image}
-              resizeMode="cover"
+              contentFit="cover"
             />
           ) : (
             <View
