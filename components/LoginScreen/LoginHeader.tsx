@@ -9,7 +9,7 @@ function LoginHeader() {
       <Text
         style={[
           styles.title,
-          { color: colorScheme === "dark" ? "#a9a5e2" : "#1F41BB" },
+          { color: colorScheme === "dark" ? "#7cacf8" : "#1F41BB" },
         ]}
       >
         Warrager
@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    color: "#1F41BB",
     fontSize: 45,
     fontWeight: "bold",
   },

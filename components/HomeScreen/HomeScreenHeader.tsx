@@ -9,7 +9,7 @@ function HomeScreenHeader() {
       <Text
         style={[
           styles.text,
-          { color: colorScheme === "dark" ? "#a9a5e2" : "#1F41BB" },
+          { color: colorScheme === "dark" ? "#7cacf8" : "#1F41BB" },
         ]}
       >
         Warrager
@@ -20,7 +20,6 @@ function HomeScreenHeader() {
 
 const styles = StyleSheet.create({
   text: {
-    color: "#1F41BB",
     fontWeight: "bold",
     fontSize: 40,
   },

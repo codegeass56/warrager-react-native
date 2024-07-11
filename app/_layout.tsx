@@ -24,7 +24,7 @@ function _layout() {
             Platform.OS === "android"
               ? {
                   backgroundColor:
-                    colorScheme === "dark" ? "#a9a5e2" : theme.colors.surface,
+                    colorScheme === "dark" ? "#7cacf8" : theme.colors.surface,
                 }
               : {
                   backgroundColor:
@@ -44,7 +44,7 @@ function _layout() {
             Platform.OS === "android"
               ? {
                   backgroundColor:
-                    colorScheme === "dark" ? "#a9a5e2" : theme.colors.surface,
+                    colorScheme === "dark" ? "#7cacf8" : theme.colors.surface,
                 }
               : {
                   backgroundColor:
@@ -64,7 +64,7 @@ function _layout() {
             Platform.OS === "android"
               ? {
                   backgroundColor:
-                    colorScheme === "dark" ? "#a9a5e2" : theme.colors.surface,
+                    colorScheme === "dark" ? "#7cacf8" : theme.colors.surface,
                 }
               : {
                   backgroundColor:

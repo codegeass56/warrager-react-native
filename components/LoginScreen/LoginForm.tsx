@@ -123,7 +123,7 @@ function LoginForm({ onRegister }: Props) {
       {isLoading ? (
         <ActivityIndicator
           animating={true}
-          color={colorScheme === "dark" ? "#a9a5e2" : "#1F41BB"}
+          color={colorScheme === "dark" ? "#7cacf8" : "#1F41BB"}
         />
       ) : null}
 

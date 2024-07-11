@@ -10,7 +10,7 @@ function SectionTitle({ style, text }: Props) {
   const colorScheme = useColorScheme();
   return (
     <Text
-      style={[style, { color: colorScheme === "dark" ? "#a9a5e2" : "#1F41BB" }]}
+      style={[style, { color: colorScheme === "dark" ? "#7cacf8" : "#1F41BB" }]}
     >
       {text}
     </Text>

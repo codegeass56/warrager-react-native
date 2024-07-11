@@ -30,11 +30,11 @@ function FormButton({
   let buttonColor;
   let textColor;
   if (mode === "contained") {
-    buttonColor = colorScheme === "dark" ? "#a9a5e2" : "#1F41BB";
-    colorScheme === "dark" ? "black" : "white";
+    buttonColor = colorScheme === "dark" ? "#7cacf8" : "#1F41BB";
+    textColor = colorScheme === "dark" ? "black" : "white";
   } else {
     buttonColor = undefined;
-    colorScheme === "dark" ? "#a9a5e2" : "#1F41BB";
+    textColor = colorScheme === "dark" ? "#7cacf8" : "#1F41BB";
   }
 
   return (

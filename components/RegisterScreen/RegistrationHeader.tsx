@@ -8,7 +8,7 @@ function RegistrationHeader() {
       <Text
         style={[
           styles.title,
-          { color: colorScheme === "dark" ? "#a9a5e2" : "#1F41BB" },
+          { color: colorScheme === "dark" ? "#7cacf8" : "#1F41BB" },
         ]}
       >
         Warrager

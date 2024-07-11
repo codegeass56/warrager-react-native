@@ -234,7 +234,7 @@ function HomeScreen() {
             style={[
               styles.fab,
               {
-                backgroundColor: colorScheme === "dark" ? "#a9a5e2" : "white",
+                backgroundColor: colorScheme === "dark" ? "#7cacf8" : "white",
               },
             ]}
             onPress={() =>
