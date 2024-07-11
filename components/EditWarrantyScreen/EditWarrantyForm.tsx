@@ -1,7 +1,6 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import {
-  Image,
   Platform,
   ScrollView,
   StyleSheet,
@@ -29,6 +28,7 @@ import {
   ref as storageRefMethod,
   deleteObject,
 } from "firebase/storage";
+import { Image } from "expo-image";
 
 const PRODUCT_NAME_FIELD_NAME = "productName";
 const DATE_FIELD_NAME = "dateOfPurchase";
@@ -67,6 +67,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const router = useRouter();
+  const navigation = useNavigation();
   const currentUser = auth.currentUser;
   const {
     control,
@@ -295,7 +296,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                 <Image
                   style={styles.image}
                   source={{ uri: imageUri }}
-                  resizeMode="cover"
+                  contentFit="contain"
                 />
                 <View style={styles.imagePreviewBtnContainer}>
                   <FormButton
@@ -317,6 +318,8 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                     mode="contained"
                     style={styles.selectPictureBtn}
                     onPress={() => {
+                      //@ts-ignore
+                      navigation.setParams({ imageUri: undefined });
                       setImageUri("");
                     }}
                   />
@@ -329,7 +332,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                 <Image
                   style={styles.imageNotEditable}
                   source={{ uri: imageUri }}
-                  resizeMode="cover"
+                  contentFit="contain"
                 />
               </View>
             ) : null}
@@ -470,12 +473,12 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: 250,
+    height: 300,
     flexDirection: "row",
   },
   imageNotEditableContainer: {
     width: "100%",
-    height: 250,
+    height: 300,
     flexDirection: "row",
     justifyContent: "center",
   },

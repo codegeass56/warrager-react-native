@@ -1,5 +1,11 @@
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { useCallback, useMemo, useRef, useState } from "react";
+import {
+  Camera,
+  CameraType as legacyCameraType,
+  FlashMode,
+  ImageType,
+} from "expo-camera/legacy";
+import { LegacyRef, useCallback, useMemo, useRef, useState } from "react";
 import {
   Linking,
   Platform,
@@ -27,7 +33,8 @@ export default function CameraScreen() {
   const [permissionStatus, setPermissionStatus] = useState<
     "granted" | "denied" | "undetermined"
   >("undetermined");
-  const cameraRef = useRef<CameraView>(null);
+  const cameraViewRef = useRef<CameraView>(null);
+  const legacyCameraRef = useRef<Camera>(null);
   const [pictureSize, setPictureSize] = useState<string | undefined>();
   const [zoom, setZoom] = useState(0);
   const [lastZoom, setLastZoom] = useState(0);
@@ -65,10 +72,9 @@ export default function CameraScreen() {
   );
 
   async function getPictureSizes() {
-    if (!cameraRef.current) return;
-    const pictureSizes =
-      await cameraRef.current.getAvailablePictureSizesAsync();
-    console.log(pictureSizes);
+    if (!cameraViewRef.current) return;
+    // const pictureSizes =
+    //   await cameraRef.current.getAvailablePictureSizesAsync();
 
     if (Platform.OS === "android") {
       // setPictureSize(pictureSizes[0]);
@@ -79,11 +85,9 @@ export default function CameraScreen() {
     }
   }
 
-  async function takePicture() {
-    if (!cameraRef.current) return;
-    let photo = await cameraRef.current.takePictureAsync({
-      quality: 1,
-    });
+  async function takePictureIOS() {
+    if (!cameraViewRef.current) return;
+    let photo = await cameraViewRef.current.takePictureAsync({});
 
     if (!photo) {
       console.log("Error taking picture");
@@ -94,12 +98,46 @@ export default function CameraScreen() {
       photo = await manipulateAsync(
         photo.uri,
         [{ rotate: 180 }, { flip: FlipType.Vertical }],
-        { compress: 1, format: SaveFormat.PNG }
+        { compress: 0.5, format: SaveFormat.JPEG }
       );
       if (!photo) {
         console.log("Error flipping picture");
         return;
       }
+    } else if (facing === "back") {
+      photo = await manipulateAsync(photo.uri, [{ rotate: 0 }], {
+        compress: 0.5,
+        format: SaveFormat.JPEG,
+      });
+    }
+
+    setImageUri(photo.uri);
+  }
+
+  async function takePictureAndroid() {
+    if (!legacyCameraRef.current) return;
+    let photo = await legacyCameraRef.current.takePictureAsync();
+
+    if (!photo) {
+      console.log("Error taking picture");
+      return;
+    }
+
+    if (facing === "front") {
+      photo = await manipulateAsync(
+        photo.uri,
+        [{ rotate: 180 }, { flip: FlipType.Vertical }],
+        { compress: 0.5, format: SaveFormat.JPEG }
+      );
+      if (!photo) {
+        console.log("Error flipping picture");
+        return;
+      }
+    } else if (facing === "back") {
+      photo = await manipulateAsync(photo.uri, [{ rotate: 0 }], {
+        compress: 0.5,
+        format: SaveFormat.JPEG,
+      });
     }
 
     setImageUri(photo.uri);
@@ -152,25 +190,47 @@ export default function CameraScreen() {
   ) : (
     <GestureHandlerRootView style={styles.container}>
       <GestureDetector gesture={pinchGesture}>
-        <CameraView
-          style={styles.camera}
-          mode="picture"
-          flash="auto"
-          ref={cameraRef}
-          onCameraReady={getPictureSizes}
-          pictureSize={pictureSize}
-          zoom={zoom}
-          facing={facing}
-        >
-          <View />
-        </CameraView>
+        {Platform.OS === "ios" ? (
+          <CameraView
+            style={styles.camera}
+            flash="auto"
+            ref={cameraViewRef}
+            onCameraReady={getPictureSizes}
+            pictureSize={pictureSize}
+            zoom={zoom}
+            facing={facing}
+            autofocus="on"
+          >
+            <View />
+          </CameraView>
+        ) : (
+          <Camera
+            style={styles.camera}
+            flashMode={FlashMode.auto}
+            ref={legacyCameraRef}
+            onCameraReady={getPictureSizes}
+            pictureSize={pictureSize}
+            zoom={zoom}
+            type={
+              facing === "front"
+                ? legacyCameraType.front
+                : legacyCameraType.back
+            }
+            ratio={"16:9"}
+            autoFocus
+          >
+            <View />
+          </Camera>
+        )}
       </GestureDetector>
       <View style={styles.cameraBtnContainer}>
         <View style={styles.emptyView} />
         <View style={styles.captureBtnContainer}>
           <TouchableOpacity
             style={styles.captureBtnTouchable}
-            onPress={takePicture}
+            onPress={
+              Platform.OS === "ios" ? takePictureIOS : takePictureAndroid
+            }
           >
             <View style={styles.captureBtn} />
           </TouchableOpacity>

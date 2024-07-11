@@ -1,9 +1,10 @@
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { Image } from "expo-image";
 import VerticalDivider from "./VerticalDivider";
 import { useTheme } from "react-native-paper";
 import FormButton from "./FormComponents/FormButton";
 import { router } from "expo-router";
+import { useEffect } from "react";
 
 type Props = {
   imageUri: string;
@@ -92,8 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
-    // paddingTop: 50,
-    paddingBottom: 50,
+    paddingBottom: Platform.OS === "ios" ? 50 : 35,
   },
   imageContainer: {
     flex: 10,
@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
   imagePreviewBtnContainer: {
     flex: 1,
     flexDirection: "row",
-    // backgroundColor: "red",
     width: "100%",
     marginTop: 20,
   },

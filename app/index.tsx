@@ -43,12 +43,15 @@ const randomMC = require("random-material-color");
 /*
  */
 
-// Issues:
+// Fixed:
 /*
   Fix the image preview not showing in the forms on Android.
-
   Increase image preview height in AddWarrantyScreen and EditWarrantyScreen.
 
+*/
+
+// Issues:
+/*
   Fix render error on adding new warranty. Error seems to be in Product.tsx.
 */
 

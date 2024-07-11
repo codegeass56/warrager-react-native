@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
-import { Platform, StyleSheet, View, Image } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import * as Localization from "expo-localization";
 import TextField from "../FormComponents/TextField";
@@ -17,6 +17,7 @@ import FormButton from "../FormComponents/FormButton";
 import { useNavigation } from "expo-router";
 import { getDownloadURL, uploadBytes } from "firebase/storage";
 import { ref as storageRefMethod } from "firebase/storage";
+import { Image } from "expo-image";
 
 const PRODUCT_NAME_FIELD_NAME = "productName";
 const DATE_FIELD_NAME = "dateOfPurchase";
@@ -88,17 +89,6 @@ function AddWarrantyForm() {
       navigation.setParams({ imageUri: undefined });
     });
   }, []);
-
-  // async function uploadImage(uri: string, productKey: string) {
-  //   const response = await fetch(uri);
-  //   const blob = await response.blob();
-  //   let ref = storageRef(storage, `${currentUser?.uid}/images/` + productKey);
-
-  // 'file' comes from the Blob or File API
-  //   uploadBytes(ref, blob).then((snapshot) => {
-  //     console.log("Uploaded a blob or file!");
-  //   });
-  // }
 
   async function onAddWarranty(data: FormData) {
     //Create deep copy of date input
@@ -256,8 +246,9 @@ function AddWarrantyForm() {
           <Image
             style={styles.image}
             source={{ uri: imageUri }}
-            resizeMode="cover"
+            contentFit="contain"
           />
+
           <View style={styles.imagePreviewBtnContainer}>
             <FormButton
               text={"Change Picture"}
@@ -365,7 +356,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: "100%",
-    height: 250,
+    height: 300,
     flexDirection: "row",
   },
   image: {
