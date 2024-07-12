@@ -39,16 +39,16 @@ function ProductPriceInput({
 }: Props) {
   const currencyList = [
     {
-      label: "AED",
-      value: "AED",
-    },
-    {
       label: "USD",
       value: "USD",
     },
     {
-      label: "Other",
-      value: "other",
+      label: "INR",
+      value: "INR",
+    },
+    {
+      label: "AED",
+      value: "AED",
     },
   ];
 
@@ -70,7 +70,7 @@ function ProductPriceInput({
           componentName={priceFieldCompName}
           mode="outlined"
           label="Price"
-          placeholderText="AED"
+          placeholderText="1000"
           keyboardType="numeric"
           returnKeyType="done"
           validation={{

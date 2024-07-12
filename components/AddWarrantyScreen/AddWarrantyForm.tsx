@@ -64,7 +64,7 @@ function AddWarrantyForm() {
     defaultValues: {
       [PRODUCT_NAME_FIELD_NAME]: "",
       [DATE_FIELD_NAME]: new Date(),
-      [CURRENCY_FIELD_NAME]: "AED",
+      [CURRENCY_FIELD_NAME]: "USD",
       [PRODUCT_PRICE_FIELD_NAME]: "0",
       [CATEGORY_FIELD_NAME]: "Product Category",
       [WARRANTY_PERIOD_FIELD_NAME]: "",
