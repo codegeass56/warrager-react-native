@@ -1,12 +1,12 @@
 import { useRouter } from "expo-router";
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { Alert, StyleSheet, useColorScheme, View } from "react-native";
 import {
   GestureHandlerRootView,
   Swipeable,
 } from "react-native-gesture-handler";
 import { Icon, IconButton, Text, useTheme } from "react-native-paper";
 import VerticalDivider from "../VerticalDivider";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ref as dbRefMethod, update } from "firebase/database";
 import { auth, database, storage } from "@/firebaseConfig";
 import { deleteObject, ref as storageRefMethod } from "firebase/storage";
@@ -19,7 +19,6 @@ type Props = {
   productName: string;
   dateOfPurchase: string;
   expiryDate: string;
-  purchaseLocation?: string;
   warrantyPeriod: string;
   warrantyDurationType: string;
   price: string;
@@ -35,7 +34,6 @@ export default function Product({
   productName,
   dateOfPurchase,
   expiryDate,
-  purchaseLocation,
   warrantyPeriod,
   warrantyDurationType,
   price,
@@ -76,6 +74,24 @@ export default function Product({
     }
   }
 
+  function showDeleteConfirmation() {
+    Alert.alert(
+      "Are you sure you want to delete this warranty?",
+      "This action cannot be undone.",
+      [
+        {
+          text: "Confirm",
+          onPress: onDelete,
+        },
+        {
+          text: "Cancel",
+          onPress: () => {},
+          style: "cancel",
+        },
+      ]
+    );
+  }
+
   return (
     <GestureHandlerRootView>
       <Swipeable
@@ -101,7 +117,7 @@ export default function Product({
               <IconButton
                 icon="trash-can"
                 size={40}
-                onPress={() => onDelete()}
+                onPress={showDeleteConfirmation}
                 iconColor="white"
                 style={[
                   styles.trashIcon,
@@ -128,7 +144,12 @@ export default function Product({
             <View
               style={[
                 styles.noImageContainer,
-                { backgroundColor: theme.colors.onSecondary },
+                {
+                  backgroundColor:
+                    colorScheme === "light"
+                      ? theme.colors.onSecondary
+                      : "#0d2136",
+                },
               ]}
             >
               <View style={styles.noImage}>
@@ -145,23 +166,47 @@ export default function Product({
             style={[
               styles.productDetails,
               {
-                backgroundColor: theme.colors.onSecondary,
+                backgroundColor:
+                  colorScheme === "light"
+                    ? theme.colors.onSecondary
+                    : "#0d2136",
               },
             ]}
           >
-            <Text style={styles.productName} numberOfLines={2}>
+            <Text
+              style={[
+                styles.productName,
+                { color: colorScheme === "light" ? "#000" : "#7cacf8" },
+              ]}
+              numberOfLines={2}
+            >
               {productName}
             </Text>
-            <Text>Brand: {brand}</Text>
-            <Text>Date of Expiry: {expiryDate}</Text>
-            <Text>Date of Purchase: {dateOfPurchase}</Text>
-            <Text>
+            <Text
+              style={{ color: colorScheme === "light" ? "#000" : "#7cacf8" }}
+            >
+              Brand: {brand}
+            </Text>
+            <Text
+              style={{ color: colorScheme === "light" ? "#000" : "#7cacf8" }}
+            >
+              Date of Expiry: {expiryDate}
+            </Text>
+            <Text
+              style={{ color: colorScheme === "light" ? "#000" : "#7cacf8" }}
+            >
+              Date of Purchase: {dateOfPurchase}
+            </Text>
+            <Text
+              style={{ color: colorScheme === "light" ? "#000" : "#7cacf8" }}
+            >
               Warranty Period: {warrantyPeriod} {warrantyDurationType}
             </Text>
-            <Text>
+            <Text
+              style={{ color: colorScheme === "light" ? "#000" : "#7cacf8" }}
+            >
               Price: {currencyType} {price}
             </Text>
-            {purchaseLocation ? <Text>{purchaseLocation}</Text> : null}
           </View>
         </View>
       </Swipeable>
@@ -205,6 +250,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: "100%",
     textAlign: "center",
+    color: "#7cacf8",
   },
   rightActions: {
     flexDirection: "row",
@@ -221,5 +267,8 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     margin: 0,
     width: 70,
+  },
+  textColor: {
+    color: "#7cacf8",
   },
 });
