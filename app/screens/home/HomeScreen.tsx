@@ -234,13 +234,13 @@ function HomeScreen() {
             style={[
               styles.fab,
               {
-                backgroundColor: colorScheme === "dark" ? "#7cacf8" : "white",
+                backgroundColor: colorScheme === "dark" ? "white" : "#1F41BB",
               },
             ]}
             onPress={() =>
               router.push("/screens/home/add-warranty/AddWarrantyScreen")
             }
-            color={colorScheme === "dark" ? "black" : "#1F41BB"}
+            color={colorScheme === "dark" ? "#031525" : "white"}
             mode="elevated"
             label="Product Warranty"
           />
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     gap: 10,
     marginTop: 30,
-    marginBottom: 15,
+    marginBottom: 30,
   },
   noProductsTextContainer: {
     height: "50%",
