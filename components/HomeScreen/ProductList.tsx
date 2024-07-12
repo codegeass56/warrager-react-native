@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
-import { Button, Icon, Menu } from "react-native-paper";
+import { Button, Icon, Menu, useTheme } from "react-native-paper";
 import Product from "./Product";
 
 type Props = {
@@ -32,13 +32,15 @@ export default function ProductList({
           anchor={
             <Button
               onPress={() => setShowSortMenu(true)}
-              icon={({}) => (
+              icon={() => (
                 <Icon
                   source="sort-variant"
                   size={25}
                   color={colorScheme === "dark" ? "#fff" : "#000"}
                 />
               )}
+              textColor={colorScheme === "dark" ? "#fff" : "#000"}
+              mode="outlined"
             >
               {sortOrder}
             </Button>
