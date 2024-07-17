@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useColorScheme } from "react-native";
-import { Chip } from "react-native-paper";
+import { Chip, Icon } from "react-native-paper";
 
 type Props = {
   brand: string;
@@ -10,6 +10,9 @@ type Props = {
 function MaterialChip({ brand, onSelect }: Props) {
   const [selected, setSelected] = useState(false);
   const colorScheme = useColorScheme();
+  const textColor = {
+    color: colorScheme === "dark" ? "black" : "white",
+  };
   return (
     <Chip
       onPress={() => {
@@ -32,12 +35,15 @@ function MaterialChip({ brand, onSelect }: Props) {
         }
       }}
       selected={selected}
+      icon={() => {
+        if (selected) {
+          return <Icon source={"close"} size={20} color={textColor.color} />;
+        }
+      }}
       style={{
         backgroundColor: colorScheme === "dark" ? "#7cacf8" : "#1F41BB",
       }}
-      textStyle={{
-        color: colorScheme === "dark" ? "black" : "white",
-      }}
+      textStyle={textColor}
     >
       {brand}
     </Chip>

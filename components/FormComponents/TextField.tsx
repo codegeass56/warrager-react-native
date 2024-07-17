@@ -1,5 +1,5 @@
 import { Controller, FieldError } from "react-hook-form";
-import { View } from "react-native";
+import { useColorScheme, View } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
 
 function TextField({
@@ -20,6 +20,14 @@ function TextField({
   editable,
   autoCapitalize,
 }: TextFieldProps) {
+  const colorScheme = useColorScheme();
+
+  let outlineColor: string;
+  let activeOutlineColor: string;
+  if (mode === "outlined") {
+    outlineColor = colorScheme === "dark" ? "#7cacf8" : "#1F41BB";
+    activeOutlineColor = colorScheme === "dark" ? "#7cacf8" : "#1F41BB";
+  }
   return (
     <Controller
       control={control}
@@ -45,6 +53,8 @@ function TextField({
               secureTextEntry={secureTextEntry}
               editable={editable}
               autoCapitalize={autoCapitalize}
+              activeOutlineColor={activeOutlineColor}
+              outlineColor={outlineColor}
             />
             {validation.errors[`${componentName}`] && (
               <HelperText type="error">
@@ -64,6 +74,8 @@ function TextField({
             keyboardType={keyboardType}
             returnKeyType={returnKeyType}
             editable={editable}
+            activeOutlineColor={activeOutlineColor}
+            outlineColor={outlineColor}
           />
         )
       }
