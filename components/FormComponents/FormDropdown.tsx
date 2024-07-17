@@ -35,6 +35,7 @@ function FormDropdown({
             label={label}
             mode={mode}
             visible={showDropdown}
+            //@ts-ignore
             showDropDown={editable ? () => setShowDropdown(true) : null}
             onDismiss={() => setShowDropdown(false)}
             value={value}
@@ -45,6 +46,7 @@ function FormDropdown({
                 ? styles.androidDropdownStyle
                 : styles.iosDropdownStyle
             }
+            //@ts-ignore
             inputProps={
               editable
                 ? {
