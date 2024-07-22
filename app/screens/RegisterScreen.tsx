@@ -12,7 +12,6 @@ function RegisterScreen({ onLogin }: Props) {
     <PaperProvider>
       <View style={styles.registerScreenContainer}>
         <RegistrationHeader />
-
         <ScrollView
           automaticallyAdjustKeyboardInsets={Platform.OS === "ios"}
           showsVerticalScrollIndicator={false}

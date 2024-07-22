@@ -150,7 +150,6 @@ export default function RootLayout() {
         )}
         {isLoading && <LoadingScreen />}
         {notRegistered && <RegisterScreen onLogin={setNotRegistered} />}
-        {/* <CameraScreen /> */}
         <StatusBar style="auto" />
       </View>
     </PaperProvider>

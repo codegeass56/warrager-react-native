@@ -3,9 +3,9 @@ import {
   Camera,
   CameraType as legacyCameraType,
   FlashMode,
-  ImageType,
+  AutoFocus,
 } from "expo-camera/legacy";
-import { LegacyRef, useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   Linking,
   Platform,
@@ -73,14 +73,9 @@ export default function CameraScreen() {
 
   async function getPictureSizes() {
     if (!cameraViewRef.current) return;
-    // const pictureSizes =
-    //   await cameraRef.current.getAvailablePictureSizesAsync();
-
     if (Platform.OS === "android") {
-      // setPictureSize(pictureSizes[0]);
       setPictureSize("1920x1080");
     } else {
-      // setPictureSize("Low");
       setPictureSize("1920x1080");
     }
   }
@@ -217,7 +212,7 @@ export default function CameraScreen() {
                 : legacyCameraType.back
             }
             ratio={"16:9"}
-            autoFocus
+            autoFocus={AutoFocus.on}
           >
             <View />
           </Camera>
