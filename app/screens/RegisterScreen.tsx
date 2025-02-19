@@ -2,6 +2,7 @@ import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import RegistrationForm from "../../components/RegisterScreen/RegistrationForm";
 import RegistrationHeader from "../../components/RegisterScreen/RegistrationHeader";
 import { PaperProvider } from "react-native-paper";
+import React from "react";
 
 type Props = {
   onLogin: React.Dispatch<React.SetStateAction<boolean>>;

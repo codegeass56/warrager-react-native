@@ -12,6 +12,7 @@ import LoadingScreen from "../LoadingScreen";
 import { useForm } from "react-hook-form";
 import HeaderAndAccountMenu from "@/components/HeaderAndAccountMenu";
 import SectionTitle from "@/components/SectionTitle";
+import React from "react";
 
 function HomeScreen() {
   const [profileColor, setProfileColor] = useState("red");

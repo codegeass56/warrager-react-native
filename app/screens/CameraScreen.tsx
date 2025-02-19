@@ -26,6 +26,7 @@ import { FlipType, manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import FormButton from "@/components/FormComponents/FormButton";
 import SectionTitle from "@/components/SectionTitle";
 import { useLocalSearchParams } from "expo-router";
+import React from "react";
 
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
