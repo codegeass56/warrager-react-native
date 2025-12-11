@@ -80,7 +80,7 @@ function AddWarrantyForm() {
   });
 
   useEffect(() => {
-    if (params["imageUri"] !== "undefined") {
+    if (params["imageUri"]) {
       setImageUri(params["imageUri"] as string);
     }
   }, [params]);
