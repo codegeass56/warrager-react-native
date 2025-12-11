@@ -1,23 +1,25 @@
+import { auth, database, storage } from "@/firebaseConfig";
+import { Image } from "expo-image";
+import * as Localization from "expo-localization";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { child, ref as dbRefMethod, push, update } from "firebase/database";
+import {
+  getDownloadURL,
+  ref as storageRefMethod,
+  uploadBytes,
+} from "firebase/storage";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Platform, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
-import * as Localization from "expo-localization";
-import TextField from "../FormComponents/TextField";
-import EmailField from "../FormComponents/EmailField";
 import DatePicker from "../FormComponents/DatePicker";
-import ProductPriceInput from "./ProductPriceInput";
-import WarrantyPeriodInput from "./WarrantyPeriodInput";
-import StoreContactInput from "./StoreContactInput";
-import { child, push, ref as dbRefMethod, update } from "firebase/database";
-import { auth, database, storage } from "@/firebaseConfig";
-import { useEffect, useState } from "react";
-import SectionTitle from "../SectionTitle";
+import EmailField from "../FormComponents/EmailField";
 import FormButton from "../FormComponents/FormButton";
-import { useNavigation } from "expo-router";
-import { getDownloadURL, uploadBytes } from "firebase/storage";
-import { ref as storageRefMethod } from "firebase/storage";
-import { Image } from "expo-image";
+import TextField from "../FormComponents/TextField";
+import SectionTitle from "../SectionTitle";
+import ProductPriceInput from "./ProductPriceInput";
+import StoreContactInput from "./StoreContactInput";
+import WarrantyPeriodInput from "./WarrantyPeriodInput";
 
 const PRODUCT_NAME_FIELD_NAME = "productName";
 const DATE_FIELD_NAME = "dateOfPurchase";

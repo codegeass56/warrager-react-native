@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import { Control, Controller } from "react-hook-form";
 import { Platform, StyleProp, StyleSheet, View, ViewStyle } from "react-native";

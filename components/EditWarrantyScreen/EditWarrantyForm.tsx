@@ -1,4 +1,16 @@
+import LoadingScreen from "@/app/screens/LoadingScreen";
+import { auth, database, storage } from "@/firebaseConfig";
+import { Image } from "expo-image";
+import * as Localization from "expo-localization";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import { child, ref as dbRefMethod, get, update } from "firebase/database";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref as storageRefMethod,
+  uploadBytes,
+} from "firebase/storage";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Platform,
@@ -8,27 +20,15 @@ import {
   View,
 } from "react-native";
 import { PaperProvider, Text, useTheme } from "react-native-paper";
-import * as Localization from "expo-localization";
-import TextField from "../FormComponents/TextField";
-import EmailField from "../FormComponents/EmailField";
-import DatePicker from "../FormComponents/DatePicker";
 import ProductPriceInput from "../AddWarrantyScreen/ProductPriceInput";
-import WarrantyPeriodInput from "../AddWarrantyScreen/WarrantyPeriodInput";
 import StoreContactInput from "../AddWarrantyScreen/StoreContactInput";
-import { child, get, ref as dbRefMethod, update } from "firebase/database";
-import { auth, database, storage } from "@/firebaseConfig";
-import { useEffect, useState } from "react";
-import LoadingScreen from "@/app/screens/LoadingScreen";
-import SectionTitle from "../SectionTitle";
+import WarrantyPeriodInput from "../AddWarrantyScreen/WarrantyPeriodInput";
+import DatePicker from "../FormComponents/DatePicker";
+import EmailField from "../FormComponents/EmailField";
 import FormButton from "../FormComponents/FormButton";
+import TextField from "../FormComponents/TextField";
+import SectionTitle from "../SectionTitle";
 import VerticalDivider from "../VerticalDivider";
-import {
-  getDownloadURL,
-  uploadBytes,
-  ref as storageRefMethod,
-  deleteObject,
-} from "firebase/storage";
-import { Image } from "expo-image";
 
 const PRODUCT_NAME_FIELD_NAME = "productName";
 const DATE_FIELD_NAME = "dateOfPurchase";

@@ -1,13 +1,13 @@
 import { auth } from "@/firebaseConfig";
+import { FirebaseError } from "firebase/app";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Platform, StyleSheet, useColorScheme, View } from "react-native";
-import { Text, ActivityIndicator, TextInputProps } from "react-native-paper";
-import { FirebaseError } from "firebase/app";
+import { ActivityIndicator, Text, TextInputProps } from "react-native-paper";
 import EmailField from "../FormComponents/EmailField";
-import PasswordField from "../FormComponents/PasswordField";
 import FormButton from "../FormComponents/FormButton";
+import PasswordField from "../FormComponents/PasswordField";
 import SectionTitle from "../SectionTitle";
 
 type Props = {

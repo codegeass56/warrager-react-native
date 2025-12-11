@@ -1,10 +1,9 @@
-import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { Image } from "expo-image";
-import VerticalDivider from "./VerticalDivider";
+import { router } from "expo-router";
+import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { useTheme } from "react-native-paper";
 import FormButton from "./FormComponents/FormButton";
-import { router } from "expo-router";
-import { useEffect } from "react";
+import VerticalDivider from "./VerticalDivider";
 
 type Props = {
   imageUri: string;

@@ -1,5 +1,4 @@
 import AddWarrantyForm from "@/components/AddWarrantyScreen/AddWarrantyForm";
-import React from "react";
 import { Platform, ScrollView, StyleSheet, useColorScheme } from "react-native";
 import { PaperProvider, useTheme } from "react-native-paper";
 

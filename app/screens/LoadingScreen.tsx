@@ -1,4 +1,3 @@
-import React from "react";
 import { StyleSheet, useColorScheme, View } from "react-native";
 import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 

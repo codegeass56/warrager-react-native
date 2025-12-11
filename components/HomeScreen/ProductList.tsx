@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FlatList, StyleSheet, useColorScheme, View } from "react-native";
-import { Button, Icon, Menu, useTheme } from "react-native-paper";
+import { Button, Icon, Menu } from "react-native-paper";
 import Product from "./Product";
 
 type Props = {

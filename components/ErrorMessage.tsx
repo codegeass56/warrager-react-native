@@ -1,4 +1,4 @@
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
 function ErrorMessage({ message }: { message: string }) {

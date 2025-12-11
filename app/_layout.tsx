@@ -1,5 +1,4 @@
 import { Stack } from "expo-router";
-import React from "react";
 import { Platform, useColorScheme } from "react-native";
 import { useTheme } from "react-native-paper";
 

@@ -1,17 +1,17 @@
+import { auth, database, storage } from "@/firebaseConfig";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import { ref as dbRefMethod, update } from "firebase/database";
+import { deleteObject, ref as storageRefMethod } from "firebase/storage";
+import { useRef } from "react";
 import { Alert, StyleSheet, useColorScheme, View } from "react-native";
 import {
   GestureHandlerRootView,
   Swipeable,
 } from "react-native-gesture-handler";
 import { Icon, IconButton, Text, useTheme } from "react-native-paper";
-import VerticalDivider from "../VerticalDivider";
-import { useRef, useState } from "react";
-import { ref as dbRefMethod, update } from "firebase/database";
-import { auth, database, storage } from "@/firebaseConfig";
-import { deleteObject, ref as storageRefMethod } from "firebase/storage";
-import { Image } from "expo-image";
 import SectionTitle from "../SectionTitle";
+import VerticalDivider from "../VerticalDivider";
 
 type Props = {
   imgSrc?: string;

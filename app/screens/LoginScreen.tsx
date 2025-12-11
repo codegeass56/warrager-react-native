@@ -1,6 +1,5 @@
 import LoginForm from "@/components/LoginScreen/LoginForm";
 import LoginHeader from "@/components/LoginScreen/LoginHeader";
-import React from "react";
 import { StyleSheet, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
 

@@ -1,10 +1,10 @@
-import { Control, Controller } from "react-hook-form";
 import DateTimePicker, {
   DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
+import * as Localization from "expo-localization";
+import { Control, Controller } from "react-hook-form";
 import { Platform, StyleSheet, useColorScheme } from "react-native";
 import { Button, Text } from "react-native-paper";
-import * as Localization from "expo-localization";
 type Props = {
   componentName: string;
   control: Control<any>;

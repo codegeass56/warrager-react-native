@@ -1,9 +1,8 @@
 import { auth } from "@/firebaseConfig";
-import { useRouter } from "expo-router";
 import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useRef, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   Keyboard,
   Platform,
@@ -11,19 +10,12 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import {
-  Button,
-  TextInput,
-  Text,
-  HelperText,
-  ActivityIndicator,
-  Title,
-} from "react-native-paper";
-import EmailField from "../FormComponents/EmailField";
-import PasswordField from "../FormComponents/PasswordField";
+import { ActivityIndicator, Text } from "react-native-paper";
 import ErrorMessage from "../ErrorMessage";
-import SectionTitle from "../SectionTitle";
+import EmailField from "../FormComponents/EmailField";
 import FormButton from "../FormComponents/FormButton";
+import PasswordField from "../FormComponents/PasswordField";
+import SectionTitle from "../SectionTitle";
 
 type Props = {
   onRegister: React.Dispatch<React.SetStateAction<boolean>>;

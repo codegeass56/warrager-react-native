@@ -1,7 +1,7 @@
 import { Control, FieldErrors, RegisterOptions } from "react-hook-form";
-import TextField from "../FormComponents/TextField";
 import { StyleSheet, View } from "react-native";
 import FormDropdown from "../FormComponents/FormDropdown";
+import TextField from "../FormComponents/TextField";
 
 type Props = {
   control: Control<any>;

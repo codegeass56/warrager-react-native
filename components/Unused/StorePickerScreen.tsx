@@ -1,9 +1,8 @@
-import { RefObject, useEffect, useRef, useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
+import { useEffect, useRef, useState } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { Searchbar } from "react-native-paper";
-import { FlatList } from "react-native-reanimated/lib/typescript/Animated";
 
 type CurrentLocation = {
   latitude: number;

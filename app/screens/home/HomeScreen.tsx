@@ -1,18 +1,17 @@
-import SearchBar from "@/components/HomeScreen/SearchBar";
-import ProductList from "@/components/HomeScreen/ProductList";
+import HeaderAndAccountMenu from "@/components/HeaderAndAccountMenu";
 import Filter from "@/components/HomeScreen/Filter";
+import ProductList from "@/components/HomeScreen/ProductList";
+import SearchBar from "@/components/HomeScreen/SearchBar";
+import SectionTitle from "@/components/SectionTitle";
 import { auth, database } from "@/firebaseConfig";
 import { useNavigation, useRouter } from "expo-router";
 import { signOut } from "firebase/auth";
 import { child, get, ref } from "firebase/database";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { FAB, PaperProvider } from "react-native-paper";
 import LoadingScreen from "../LoadingScreen";
-import { useForm } from "react-hook-form";
-import HeaderAndAccountMenu from "@/components/HeaderAndAccountMenu";
-import SectionTitle from "@/components/SectionTitle";
-import React from "react";
 
 function HomeScreen() {
   const [profileColor, setProfileColor] = useState("red");
