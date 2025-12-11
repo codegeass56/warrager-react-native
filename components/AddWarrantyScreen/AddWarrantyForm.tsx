@@ -52,7 +52,7 @@ type FormData = {
 function AddWarrantyForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [imageUri, setImageUri] = useState("");
-  const params = useLocalSearchParams();
+  const params = useLocalSearchParams<{ imageUri: string }>();
   const router = useRouter();
   const navigation = useNavigation();
   const currentUser = auth.currentUser;
@@ -81,7 +81,7 @@ function AddWarrantyForm() {
 
   useEffect(() => {
     if (params["imageUri"]) {
-      setImageUri(params["imageUri"] as string);
+      setImageUri(params["imageUri"]);
     }
   }, [params]);
 

@@ -63,7 +63,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
   const [isEditable, setIsEditable] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [imageUri, setImageUri] = useState("");
-  const params = useLocalSearchParams();
+  const params = useLocalSearchParams<{ imageUri: string }>();
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const router = useRouter();
@@ -183,7 +183,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
       Object.hasOwn(params, "imageUri") &&
       params["imageUri"] !== "undefined"
     ) {
-      setImageUri(params["imageUri"] as string);
+      setImageUri(params["imageUri"]);
     }
   }, [params]);
 
