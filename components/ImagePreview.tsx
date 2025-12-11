@@ -9,7 +9,7 @@ type Props = {
   imageUri: string;
   onRetake: React.Dispatch<React.SetStateAction<string>>;
   previousScreenName: string;
-  productId?: string;
+  productId: string | number;
 };
 
 function ImagePreview({
