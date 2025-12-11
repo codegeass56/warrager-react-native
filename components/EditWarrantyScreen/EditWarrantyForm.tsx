@@ -2,7 +2,7 @@ import LoadingScreen from "@/app/screens/LoadingScreen";
 import { auth, database, storage } from "@/firebaseConfig";
 import { Image } from "expo-image";
 import * as Localization from "expo-localization";
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { child, ref as dbRefMethod, get, update } from "firebase/database";
 import {
   deleteObject,
@@ -67,7 +67,6 @@ function EditWarrantyForm({ productId }: { productId: string }) {
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const router = useRouter();
-  const navigation = useNavigation();
   const currentUser = auth.currentUser;
   const {
     control,
@@ -318,8 +317,6 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                     mode="contained"
                     style={styles.selectPictureBtn}
                     onPress={() => {
-                      //@ts-ignore
-                      navigation.setParams({ imageUri: undefined });
                       setImageUri("");
                     }}
                   />
