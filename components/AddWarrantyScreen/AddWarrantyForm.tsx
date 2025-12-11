@@ -54,7 +54,6 @@ function AddWarrantyForm() {
   const [imageUri, setImageUri] = useState("");
   const params = useLocalSearchParams<{ imageUri: string }>();
   const router = useRouter();
-  const navigation = useNavigation();
   const currentUser = auth.currentUser;
 
   const {
@@ -86,10 +85,7 @@ function AddWarrantyForm() {
   }, [params]);
 
   useEffect(() => {
-    navigation.addListener("beforeRemove", () => {
-      //@ts-ignore
-      navigation.setParams({ imageUri: undefined });
-    });
+    return () => setImageUri("");
   }, []);
 
   async function onAddWarranty(data: FormData) {
@@ -270,8 +266,6 @@ function AddWarrantyForm() {
               mode="contained"
               style={styles.selectPictureBtn}
               onPress={() => {
-                //@ts-ignore
-                navigation.setParams({ imageUri: undefined });
                 setImageUri("");
               }}
             />
