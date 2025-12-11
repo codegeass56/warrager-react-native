@@ -1,11 +1,9 @@
+import FormButton from "@/components/FormComponents/FormButton";
+import SectionTitle from "@/components/SectionTitle";
 import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import {
-  Camera,
-  CameraType as legacyCameraType,
-  FlashMode,
-  AutoFocus,
-} from "expo-camera/legacy";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
+import { useLocalSearchParams } from "expo-router";
+import { useRef, useState } from "react";
 import {
   Linking,
   Platform,
@@ -13,131 +11,65 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-  GestureUpdateEvent,
-  PinchGestureHandlerEventPayload,
-} from "react-native-gesture-handler";
 import { IconButton } from "react-native-paper";
 import ImagePreview from "../../components/ImagePreview";
-import { FlipType, manipulateAsync, SaveFormat } from "expo-image-manipulator";
-import FormButton from "@/components/FormComponents/FormButton";
-import SectionTitle from "@/components/SectionTitle";
-import { useLocalSearchParams } from "expo-router";
-import React from "react";
 
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
-  const params = useLocalSearchParams();
+  const { productId, previousScreenName } = useLocalSearchParams<{
+    productId: string;
+    previousScreenName: string;
+  }>();
   const [permissionStatus, setPermissionStatus] = useState<
     "granted" | "denied" | "undetermined"
   >("undetermined");
-  const cameraViewRef = useRef<CameraView>(null);
-  const legacyCameraRef = useRef<Camera>(null);
+  const cameraRef = useRef<CameraView>(null);
   const [pictureSize, setPictureSize] = useState<string | undefined>();
-  const [zoom, setZoom] = useState(0);
-  const [lastZoom, setLastZoom] = useState(0);
   const [imageUri, setImageUri] = useState("");
   const [facing, setFacing] = useState<CameraType>("back");
 
-  const onPinch = useCallback(
-    (e: GestureUpdateEvent<PinchGestureHandlerEventPayload>) => {
-      const velocity = e.velocity / 20;
-      const outFactor = lastZoom * (Platform.OS === "ios" ? 40 : 15);
-      let newZoom =
-        velocity > 0
-          ? zoom + e.scale * velocity * (Platform.OS === "ios" ? 0.01 : 50)
-          : zoom -
-            e.scale *
-              (outFactor || 1) *
-              Math.abs(velocity) *
-              (Platform.OS === "ios" ? 0.02 : 50);
-
-      if (newZoom < 0) newZoom = 0;
-      else if (newZoom > 1) newZoom = 1;
-
-      setZoom(newZoom);
-    },
-    [zoom, setZoom, lastZoom, setLastZoom]
-  );
-
-  const onPinchEnd = useCallback(() => {
-    setLastZoom(zoom);
-  }, [zoom, setLastZoom]);
-
-  const pinchGesture = useMemo(
-    () => Gesture.Pinch().onUpdate(onPinch).onEnd(onPinchEnd),
-    [onPinch, onPinchEnd]
-  );
-
   async function getPictureSizes() {
-    if (!cameraViewRef.current) return;
-    if (Platform.OS === "android") {
-      setPictureSize("1920x1080");
+    setPictureSize("1920x1080");
+  }
+
+  async function takePicture() {
+    // if (!iosCameraRef.current) return;
+    const rawPhoto = await cameraRef.current?.takePictureAsync({
+      quality: 0.5,
+    });
+
+    if (!rawPhoto) {
+      console.log("Error taking picture");
+      return;
+    }
+    const manipulateContext = ImageManipulator.manipulate(rawPhoto.uri);
+    let processedImage;
+    if (facing === "front") {
+      processedImage = await manipulateContext
+        .rotate(180)
+        .flip("vertical")
+        .renderAsync();
+
+      processedImage = await processedImage.saveAsync({
+        compress: 0.5,
+        format: SaveFormat.JPEG,
+      });
+
+      if (!processedImage) {
+        console.log("Error flipping picture");
+        return;
+      }
     } else {
-      setPictureSize("1920x1080");
-    }
-  }
-
-  async function takePictureIOS() {
-    if (!cameraViewRef.current) return;
-    let photo = await cameraViewRef.current.takePictureAsync({});
-
-    if (!photo) {
-      console.log("Error taking picture");
-      return;
-    }
-
-    if (facing === "front") {
-      photo = await manipulateAsync(
-        photo.uri,
-        [{ rotate: 180 }, { flip: FlipType.Vertical }],
-        { compress: 0.5, format: SaveFormat.JPEG }
-      );
-      if (!photo) {
-        console.log("Error flipping picture");
-        return;
-      }
-    } else if (facing === "back") {
-      photo = await manipulateAsync(photo.uri, [{ rotate: 0 }], {
+      processedImage = await manipulateContext.renderAsync();
+      processedImage = await processedImage.saveAsync({
         compress: 0.5,
         format: SaveFormat.JPEG,
       });
     }
 
-    setImageUri(photo.uri);
+    setImageUri(processedImage.uri);
   }
 
-  async function takePictureAndroid() {
-    if (!legacyCameraRef.current) return;
-    let photo = await legacyCameraRef.current.takePictureAsync();
-
-    if (!photo) {
-      console.log("Error taking picture");
-      return;
-    }
-
-    if (facing === "front") {
-      photo = await manipulateAsync(
-        photo.uri,
-        [{ rotate: 180 }, { flip: FlipType.Vertical }],
-        { compress: 0.5, format: SaveFormat.JPEG }
-      );
-      if (!photo) {
-        console.log("Error flipping picture");
-        return;
-      }
-    } else if (facing === "back") {
-      photo = await manipulateAsync(photo.uri, [{ rotate: 0 }], {
-        compress: 0.5,
-        format: SaveFormat.JPEG,
-      });
-    }
-
-    setImageUri(photo.uri);
-  }
   if (!permission) {
     // Camera permissions are still loading.
     return <View />;
@@ -176,57 +108,30 @@ export default function CameraScreen() {
     );
   }
 
-  return imageUri !== "" ? (
+  return imageUri ? (
     <ImagePreview
       imageUri={imageUri}
       onRetake={setImageUri}
-      previousScreenName={params["previousScreenName"] as string}
-      productId={params["productId"] as string}
+      previousScreenName={previousScreenName}
+      productId={productId}
     />
   ) : (
-    <GestureHandlerRootView style={styles.container}>
-      <GestureDetector gesture={pinchGesture}>
-        {Platform.OS === "ios" ? (
-          <CameraView
-            style={styles.camera}
-            flash="auto"
-            ref={cameraViewRef}
-            onCameraReady={getPictureSizes}
-            pictureSize={pictureSize}
-            zoom={zoom}
-            facing={facing}
-            autofocus="on"
-          >
-            <View />
-          </CameraView>
-        ) : (
-          <Camera
-            style={styles.camera}
-            flashMode={FlashMode.auto}
-            ref={legacyCameraRef}
-            onCameraReady={getPictureSizes}
-            pictureSize={pictureSize}
-            zoom={zoom}
-            type={
-              facing === "front"
-                ? legacyCameraType.front
-                : legacyCameraType.back
-            }
-            ratio={"16:9"}
-            autoFocus={AutoFocus.on}
-          >
-            <View />
-          </Camera>
-        )}
-      </GestureDetector>
+    <View style={styles.container}>
+      <CameraView
+        style={styles.camera}
+        flash="auto"
+        ref={cameraRef}
+        onCameraReady={getPictureSizes}
+        pictureSize={pictureSize}
+        facing={facing}
+        autofocus="on"
+      />
       <View style={styles.cameraBtnContainer}>
         <View style={styles.emptyView} />
         <View style={styles.captureBtnContainer}>
           <TouchableOpacity
             style={styles.captureBtnTouchable}
-            onPress={
-              Platform.OS === "ios" ? takePictureIOS : takePictureAndroid
-            }
+            onPress={takePicture}
           >
             <View style={styles.captureBtn} />
           </TouchableOpacity>
@@ -240,7 +145,7 @@ export default function CameraScreen() {
           />
         </View>
       </View>
-    </GestureHandlerRootView>
+    </View>
   );
 }
 
