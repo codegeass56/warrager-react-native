@@ -1,15 +1,14 @@
-import "react-native-reanimated";
+import { auth, database } from "@/firebaseConfig";
 import { StatusBar } from "expo-status-bar";
+import { onAuthStateChanged } from "firebase/auth";
+import { child, get, ref, set } from "firebase/database";
+import { useEffect, useState } from "react";
 import { StyleSheet, useColorScheme, View } from "react-native";
 import { PaperProvider, useTheme } from "react-native-paper";
-import LoginScreen from "./screens/LoginScreen";
-import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, database } from "@/firebaseConfig";
 import HomeScreen from "./screens/home/HomeScreen";
 import LoadingScreen from "./screens/LoadingScreen";
+import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import { child, get, ref, set } from "firebase/database";
 const randomMC = require("random-material-color");
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
