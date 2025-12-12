@@ -62,12 +62,12 @@ function ImagePreview({
             onPress={() => {
               // Pass and merge params back to home screen
               if (previousScreenName === "AddWarrantyScreen") {
-                router.navigate({
+                router.dismissTo({
                   pathname: "/screens/home/add-warranty/AddWarrantyScreen",
                   params: { imageUri },
                 });
               } else if (previousScreenName === "EditWarrantyScreen") {
-                router.navigate({
+                router.dismissTo({
                   pathname: `/screens/home/edit-warranty/[productId]`,
                   params: { productId, imageUri },
                 });
