@@ -68,8 +68,8 @@ function ImagePreview({
                 });
               } else if (previousScreenName === "EditWarrantyScreen") {
                 router.navigate({
-                  pathname: `/screens/home/edit-warranty/${productId}`,
-                  params: { imageUri: imageUri },
+                  pathname: `/screens/home/edit-warranty/[productId]`,
+                  params: { productId, imageUri: imageUri },
                 });
               }
             }}
