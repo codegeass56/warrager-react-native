@@ -64,12 +64,12 @@ function ImagePreview({
               if (previousScreenName === "AddWarrantyScreen") {
                 router.navigate({
                   pathname: "/screens/home/add-warranty/AddWarrantyScreen",
-                  params: { imageUri: imageUri },
+                  params: { imageUri },
                 });
               } else if (previousScreenName === "EditWarrantyScreen") {
                 router.navigate({
                   pathname: `/screens/home/edit-warranty/[productId]`,
-                  params: { productId, imageUri: imageUri },
+                  params: { productId, imageUri },
                 });
               }
             }}
