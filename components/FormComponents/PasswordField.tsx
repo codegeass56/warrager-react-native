@@ -14,8 +14,7 @@ function PasswordField({
   autoCapitalize = "none",
 }: TextFieldProps) {
   const [hidePassword, setHidePassword] = useState(true);
-
-  return validation?.errors ? (
+  return (
     <TextField
       componentName={componentName}
       control={control}
@@ -34,23 +33,7 @@ function PasswordField({
       autoFocus={autoFocus}
       validation={validation}
       autoCapitalize={autoCapitalize}
-    />
-  ) : (
-    <TextField
-      componentName={componentName}
-      control={control}
-      mode={mode}
-      label={label}
-      placeholderText={placeholderText}
-      secureTextEntry={hidePassword}
-      right={
-        <TextInput.Icon
-          icon={hidePassword ? "eye" : "eye-off"}
-          onPress={() => setHidePassword((hidePassword) => !hidePassword)}
-          forceTextInputFocus={false}
-        />
-      }
-      autoCapitalize={autoCapitalize}
+      returnKeyType={"done"}
     />
   );
 }
