@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Control, Controller } from "react-hook-form";
-import { Platform, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
-import { TextInput } from "react-native-paper";
-import DropDown, { DropDownPropsInterface } from "react-native-paper-dropdown";
+import { StyleProp, View, ViewStyle } from "react-native";
+import { Dropdown, Option } from "react-native-paper-dropdown";
 
 type Props = {
   componentName: string;
@@ -10,8 +8,11 @@ type Props = {
   mode?: "flat" | "outlined" | undefined;
   label?: string;
   style?: StyleProp<ViewStyle>;
-  dropdownItems: DropDownPropsInterface["list"];
-  editable?: boolean;
+  dropdownItems: Option[];
+  menuContentStyle?: ViewStyle;
+  placeholder?: string;
+  hideMenuHeader?: boolean;
+  disabled?: boolean;
 };
 
 function FormDropdown({
@@ -21,57 +22,33 @@ function FormDropdown({
   label,
   mode,
   dropdownItems,
-  editable,
+  menuContentStyle,
+  placeholder = "Select an option",
+  hideMenuHeader = false,
+  disabled,
 }: Props) {
-  const [showDropdown, setShowDropdown] = useState(false);
-
   return (
     <Controller
       control={control}
       name={componentName}
-      render={({ field: { onChange, value } }) => (
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
         <View style={style}>
-          <DropDown
+          <Dropdown
             label={label}
             mode={mode}
-            visible={showDropdown}
-            showDropDown={() => {
-              if (editable) setShowDropdown(true);
-            }}
-            onDismiss={() => setShowDropdown(false)}
             value={value}
-            setValue={onChange}
-            list={dropdownItems}
-            dropDownStyle={
-              Platform.OS === "android"
-                ? styles.androidDropdownStyle
-                : styles.iosDropdownStyle
-            }
-            inputProps={
-              editable
-                ? {
-                    right: (
-                      <TextInput.Icon
-                        icon={showDropdown ? "menu-up" : "menu-down"}
-                      />
-                    ),
-                  }
-                : undefined
-            }
+            options={dropdownItems}
+            onSelect={onChange}
+            menuContentStyle={menuContentStyle}
+            placeholder={placeholder}
+            hideMenuHeader={hideMenuHeader}
+            disabled={disabled}
+            error={error !== undefined}
           />
         </View>
       )}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  androidDropdownStyle: {
-    marginTop: 0,
-  },
-  iosDropdownStyle: {
-    marginTop: -40,
-  },
-});
 
 export default FormDropdown;
