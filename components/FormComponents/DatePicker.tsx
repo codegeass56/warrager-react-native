@@ -25,7 +25,7 @@ function DatePicker({ control, componentName, disabled }: Props) {
             onChange={(event, selectedDate) => {
               onChange(selectedDate);
             }}
-            timeZoneName={Localization.getCalendars()[0].timeZone!}
+            timeZoneName={Localization.getCalendars()[0].timeZone ?? undefined}
             disabled={disabled}
           />
         ) : (
