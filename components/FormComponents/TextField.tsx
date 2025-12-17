@@ -1,4 +1,4 @@
-import { Controller, FieldError } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { useColorScheme, View } from "react-native";
 import { HelperText, TextInput } from "react-native-paper";
 
@@ -33,52 +33,38 @@ function TextField({
       control={control}
       name={componentName}
       rules={validation?.rules}
-      render={({ field: { onChange, value }, fieldState: { error } }) =>
-        validation?.errors ? (
-          <View>
-            <TextInput
-              mode={mode}
-              label={label}
-              placeholder={placeholderText}
-              onChangeText={onChange}
-              value={value}
-              style={style}
-              placeholderTextColor={placeholderTextColor}
-              keyboardType={keyboardType}
-              returnKeyType={returnKeyType}
-              error={error !== undefined}
-              autoComplete={autocomplete}
-              autoFocus={autoFocus}
-              right={right}
-              secureTextEntry={secureTextEntry}
-              editable={editable}
-              autoCapitalize={autoCapitalize}
-              activeOutlineColor={activeOutlineColor}
-              outlineColor={outlineColor}
-            />
-            {validation.errors[`${componentName}`] && (
-              <HelperText type="error">
-                {(validation.errors[`${componentName}`] as FieldError).message}
-              </HelperText>
-            )}
-          </View>
-        ) : (
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
+        <View>
           <TextInput
             mode={mode}
             label={label}
             placeholder={placeholderText}
             onChangeText={onChange}
             value={value}
-            style={style}
+            style={[
+              style,
+              editable === false ? { backgroundColor: "#94a3b84e" } : {},
+            ]}
             placeholderTextColor={placeholderTextColor}
             keyboardType={keyboardType}
             returnKeyType={returnKeyType}
             editable={editable}
             activeOutlineColor={activeOutlineColor}
             outlineColor={outlineColor}
+            error={error !== undefined}
+            autoComplete={autocomplete}
+            autoFocus={autoFocus}
+            right={right}
+            secureTextEntry={secureTextEntry}
+            autoCapitalize={autoCapitalize}
           />
-        )
-      }
+          {error?.message && (
+            <HelperText type="error" style={{ paddingLeft: 0 }}>
+              {error.message}
+            </HelperText>
+          )}
+        </View>
+      )}
     />
   );
 }
