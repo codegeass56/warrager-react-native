@@ -61,7 +61,8 @@ function ProductPriceInput({
         mode="outlined"
         dropdownItems={currencyList}
         style={styles.currencyDropdownWidth}
-        editable={editable}
+        disabled={!editable}
+        hideMenuHeader={true}
       />
 
       <View style={styles.priceInput}>

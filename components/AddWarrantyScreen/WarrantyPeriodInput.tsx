@@ -69,7 +69,8 @@ function WarrantyPeriodInput({
         label="Duration"
         mode="outlined"
         dropdownItems={durationTypes}
-        editable={editable}
+        disabled={!editable}
+        hideMenuHeader={true}
       />
     </View>
   );
