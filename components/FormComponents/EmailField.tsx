@@ -52,6 +52,7 @@ function EmailField({
       }}
       editable={editable}
       autoCapitalize={autoCapitalize}
+      returnKeyType="done"
     />
   );
 }
