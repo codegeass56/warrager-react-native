@@ -28,7 +28,7 @@ function RegistrationForm({ onLogin }: Props) {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
     getValues,
   } = useForm({
     mode: "onChange",
@@ -65,8 +65,6 @@ function RegistrationForm({ onLogin }: Props) {
       setIsLoading(false);
     }
   }
-
-  const signUpDisabled = !isValid;
 
   return (
     <View style={styles.fieldContainer}>
@@ -121,7 +119,6 @@ function RegistrationForm({ onLogin }: Props) {
         mode="contained"
         onPress={handleSubmit(OnRegister)}
         text="Sign Up"
-        disabled={signUpDisabled}
       />
       {isLoading && (
         <ActivityIndicator

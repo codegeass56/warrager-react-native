@@ -36,7 +36,7 @@ function LoginForm({ onRegister }: Props) {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -74,8 +74,6 @@ function LoginForm({ onRegister }: Props) {
     }
   };
 
-  const signInDisabled = !isValid;
-
   return (
     <View style={styles.fieldContainer}>
       <SectionTitle text="Login to your account" style={styles.formTitle} />
@@ -110,7 +108,6 @@ function LoginForm({ onRegister }: Props) {
         text="Login"
         mode="contained"
         onPress={handleSubmit(onLogin)}
-        disabled={signInDisabled}
       />
       {isLoading ? (
         <ActivityIndicator
