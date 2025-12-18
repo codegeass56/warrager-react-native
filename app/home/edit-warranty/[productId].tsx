@@ -3,7 +3,7 @@ import { useLocalSearchParams } from "expo-router";
 
 function EditWarrantyScreen() {
   const { productId } = useLocalSearchParams<{ productId: string }>();
-  return <EditWarrantyForm productId={productId!} />;
+  return <EditWarrantyForm productId={productId} />;
 }
 
 export default EditWarrantyScreen;

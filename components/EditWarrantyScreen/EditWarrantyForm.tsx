@@ -1,4 +1,4 @@
-import LoadingScreen from "@/app/screens/LoadingScreen";
+import SplashScreenComponent from "@/components/SplashScreenComponent";
 import { auth, database, storage } from "@/firebaseConfig";
 import { Image } from "expo-image";
 import * as Localization from "expo-localization";
@@ -19,7 +19,7 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-import { PaperProvider, Text, useTheme } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import ProductPriceInput from "../AddWarrantyScreen/ProductPriceInput";
 import StoreContactInput from "../AddWarrantyScreen/StoreContactInput";
 import WarrantyPeriodInput from "../AddWarrantyScreen/WarrantyPeriodInput";
@@ -188,16 +188,14 @@ function EditWarrantyForm({ productId }: { productId: string }) {
   }, [params]);
 
   return (
-    <PaperProvider>
+    <View style={styles.mainContainer}>
       {!getValues(DATE_FIELD_NAME) ? (
-        <LoadingScreen />
+        <SplashScreenComponent />
       ) : (
         <ScrollView
           style={[
             styles.addWarrantyScreenContainer,
-            colorScheme === "dark"
-              ? { backgroundColor: theme.colors.onSurface }
-              : { backgroundColor: theme.colors.surface },
+            { backgroundColor: theme.colors.background },
           ]}
           contentContainerStyle={{ padding: 20 }}
           automaticallyAdjustKeyboardInsets={Platform.OS === "ios"}
@@ -205,7 +203,10 @@ function EditWarrantyForm({ productId }: { productId: string }) {
           <View style={styles.fieldContainer}>
             <SectionTitle
               text="Product Details"
-              style={styles.productDetailsTitle}
+              style={[
+                styles.productDetailsTitle,
+                { color: theme.colors.onSurfaceVariant },
+              ]}
             />
             <TextField
               control={control}
@@ -268,7 +269,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                   style={styles.selectPictureBtn}
                   onPress={() => {
                     router.navigate({
-                      pathname: `/screens/CameraScreen`,
+                      pathname: `/home/CameraScreen`,
                       params: {
                         previousScreenName: "EditWarrantyScreen",
                         productId,
@@ -304,7 +305,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                     style={styles.selectPictureBtn}
                     onPress={() => {
                       router.navigate({
-                        pathname: `/screens/CameraScreen`,
+                        pathname: `/home/CameraScreen`,
                         params: {
                           previousScreenName: "EditWarrantyScreen",
                           productId,
@@ -317,6 +318,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                     mode="contained"
                     style={styles.selectPictureBtn}
                     onPress={() => {
+                      router.setParams({ imageUri: undefined });
                       setImageUri("");
                     }}
                   />
@@ -336,7 +338,10 @@ function EditWarrantyForm({ productId }: { productId: string }) {
 
             <SectionTitle
               text="Store Details"
-              style={styles.storeDetailsTitle}
+              style={[
+                styles.storeDetailsTitle,
+                { color: theme.colors.onSurfaceVariant },
+              ]}
             />
             <TextField
               componentName={STORE_NAME_FIELD_NAME}
@@ -396,23 +401,24 @@ function EditWarrantyForm({ productId }: { productId: string }) {
           </View>
         </ScrollView>
       )}
-    </PaperProvider>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+  },
   fieldContainer: {
     gap: 20,
     paddingBottom: 50,
   },
   productDetailsTitle: {
-    color: "#1F41BB",
     fontSize: 20,
     fontWeight: Platform.OS === "ios" ? "500" : "bold",
     alignSelf: "center",
   },
   storeDetailsTitle: {
-    color: "#1F41BB",
     fontSize: 20,
     fontWeight: Platform.OS === "ios" ? "500" : "bold",
     alignSelf: "center",
@@ -447,9 +453,6 @@ const styles = StyleSheet.create({
   androidDatePickerBtnText: {
     fontSize: 17,
     fontWeight: "bold",
-  },
-  addWarrantyBtn: {
-    color: "#1F41BB",
   },
   addWarrantyScreenContainer: {
     flex: 1,

@@ -10,8 +10,8 @@ import { child, get, ref } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Platform, StyleSheet, useColorScheme, View } from "react-native";
-import { FAB, PaperProvider } from "react-native-paper";
-import LoadingScreen from "../LoadingScreen";
+import { FAB, useTheme } from "react-native-paper";
+import SplashScreenComponent from "../../components/SplashScreenComponent";
 
 function HomeScreen() {
   const [profileColor, setProfileColor] = useState("red");
@@ -31,6 +31,7 @@ function HomeScreen() {
   const router = useRouter();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
+  const theme = useTheme();
   const currentUser = auth.currentUser;
 
   //TODO: Handle error when avatar label doesn't load
@@ -198,63 +199,63 @@ function HomeScreen() {
     );
   }
 
+  if (isFetchingProducts) {
+    return <SplashScreenComponent />;
+  }
+
   return (
-    <PaperProvider>
-      {isFetchingProducts ? <LoadingScreen /> : null}
-      {!isFetchingProducts ? (
-        <View style={styles.container}>
-          <HeaderAndAccountMenu
-            avatarLabel={avatarLabel}
-            profileColor={profileColor}
-            onLogout={onLogout}
-          />
-          <View style={styles.searchFilterContainer}>
-            <SearchBar control={control} />
-            <Filter products={uniqueProducts} onFilter={setBrands} />
-          </View>
-          {searchedProducts.length === 0 ? (
-            <View style={styles.noProductsTextContainer}>
-              <SectionTitle
-                text="No products yet? Try adding one!"
-                style={styles.noProductsText}
-              />
-            </View>
-          ) : (
-            <ProductList
-              products={searchedProducts}
-              onSetSortOrder={setSortOrder}
-              sortOrder={sortOrder}
-              refreshing={refreshingProductList}
-              onRefresh={getProducts}
-              closeSwipeable={closeSwipeable}
-            />
-          )}
-          <FAB
-            icon="plus"
-            style={[
-              styles.fab,
-              {
-                backgroundColor: colorScheme === "dark" ? "white" : "#1F41BB",
-              },
-            ]}
-            onPress={() =>
-              router.push("/screens/home/add-warranty/AddWarrantyScreen")
-            }
-            color={colorScheme === "dark" ? "#031525" : "white"}
-            mode="elevated"
-            label="Product Warranty"
-          />
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
+      <View style={styles.container}>
+        <HeaderAndAccountMenu
+          avatarLabel={avatarLabel}
+          profileColor={profileColor}
+          onLogout={onLogout}
+        />
+        <View style={styles.searchFilterContainer}>
+          <SearchBar control={control} />
+          <Filter products={uniqueProducts} onFilter={setBrands} />
         </View>
-      ) : null}
-    </PaperProvider>
+        {searchedProducts.length === 0 ? (
+          <View style={styles.noProductsTextContainer}>
+            <SectionTitle
+              text="No products yet? Try adding one!"
+              style={styles.noProductsText}
+            />
+          </View>
+        ) : (
+          <ProductList
+            products={searchedProducts}
+            onSetSortOrder={setSortOrder}
+            sortOrder={sortOrder}
+            refreshing={refreshingProductList}
+            onRefresh={getProducts}
+            closeSwipeable={closeSwipeable}
+          />
+        )}
+        <FAB
+          icon="plus"
+          style={[
+            styles.fab,
+            {
+              backgroundColor: colorScheme === "dark" ? "white" : "#1F41BB",
+            },
+          ]}
+          onPress={() => router.push("/home/add-warranty/AddWarrantyScreen")}
+          color={colorScheme === "dark" ? "#031525" : "white"}
+          mode="elevated"
+          label="Product Warranty"
+        />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    paddingTop: 75,
+    paddingTop: 50,
   },
   fab: {
     position: "absolute",
@@ -263,7 +264,6 @@ const styles = StyleSheet.create({
     bottom: 30,
   },
   searchFilterContainer: {
-    width: "100%",
     paddingLeft: 10,
     paddingRight: 10,
     gap: 10,

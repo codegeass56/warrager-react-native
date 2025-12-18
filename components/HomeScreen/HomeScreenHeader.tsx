@@ -1,17 +1,11 @@
-import { StyleSheet, useColorScheme, View } from "react-native";
-import { Text } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Text, useTheme } from "react-native-paper";
 
 function HomeScreenHeader() {
-  const colorScheme = useColorScheme();
-
+  const theme = useTheme();
   return (
     <View>
-      <Text
-        style={[
-          styles.text,
-          { color: colorScheme === "dark" ? "#7cacf8" : "#1F41BB" },
-        ]}
-      >
+      <Text style={[styles.text, { color: theme.colors.onSurfaceVariant }]}>
         Warrager
       </Text>
     </View>

@@ -24,7 +24,7 @@ export default function ProductList({
   const colorScheme = useColorScheme();
 
   return (
-    <>
+    <View style={styles.container}>
       <View style={styles.sortDropdownContainer}>
         <Menu
           visible={showSortMenu}
@@ -36,10 +36,10 @@ export default function ProductList({
                 <Icon
                   source="sort-variant"
                   size={25}
-                  color={colorScheme === "dark" ? "#fff" : "#000"}
+                  color={colorScheme === "dark" ? "#ffffff" : "#000000"}
                 />
               )}
-              textColor={colorScheme === "dark" ? "#fff" : "#000"}
+              textColor={colorScheme === "dark" ? "#ffffff" : "#000000"}
               mode="outlined"
             >
               {sortOrder}
@@ -99,11 +99,14 @@ export default function ProductList({
         refreshing={refreshing}
         contentContainerStyle={styles.divider}
       />
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   search: {
     alignItems: "center",
   },

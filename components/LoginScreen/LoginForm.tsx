@@ -1,25 +1,16 @@
 import { auth } from "@/firebaseConfig";
+import { useRouter } from "expo-router";
 import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  Keyboard,
-  Platform,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from "react-native";
-import { ActivityIndicator, Text } from "react-native-paper";
+import { Keyboard, Platform, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 import ErrorMessage from "../ErrorMessage";
 import EmailField from "../FormComponents/EmailField";
 import FormButton from "../FormComponents/FormButton";
 import PasswordField from "../FormComponents/PasswordField";
 import SectionTitle from "../SectionTitle";
-
-type Props = {
-  onRegister: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
 type FormData = {
   email: string;
@@ -29,10 +20,11 @@ type FormData = {
 const EMAIL_FIELD_NAME = "email";
 const PASSWORD_FIELD_NAME = "password";
 
-function LoginForm({ onRegister }: Props) {
+function LoginForm() {
+  const router = useRouter();
   const [loginError, setLoginError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const colorScheme = useColorScheme();
+  const theme = useTheme();
   const {
     control,
     handleSubmit,
@@ -76,7 +68,10 @@ function LoginForm({ onRegister }: Props) {
 
   return (
     <View style={styles.fieldContainer}>
-      <SectionTitle text="Login to your account" style={styles.formTitle} />
+      <SectionTitle
+        text="Login to your account"
+        style={[styles.formTitle, { color: theme.colors.onSurfaceVariant }]}
+      />
       <EmailField
         control={control}
         componentName={EMAIL_FIELD_NAME}
@@ -110,10 +105,7 @@ function LoginForm({ onRegister }: Props) {
         onPress={handleSubmit(onLogin)}
       />
       {isLoading ? (
-        <ActivityIndicator
-          animating={true}
-          color={colorScheme === "dark" ? "#7cacf8" : "#1F41BB"}
-        />
+        <ActivityIndicator animating={true} color={theme.colors.onSurface} />
       ) : null}
 
       {loginError !== "" ? <ErrorMessage message={loginError} /> : null}
@@ -123,7 +115,7 @@ function LoginForm({ onRegister }: Props) {
         <FormButton
           text="Sign up"
           mode="text"
-          onPress={() => onRegister(true)}
+          onPress={() => router.navigate("/RegisterScreen")}
         />
       </View>
     </View>

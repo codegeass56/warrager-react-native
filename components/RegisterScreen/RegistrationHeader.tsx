@@ -1,16 +1,11 @@
-import { StyleSheet, useColorScheme, View } from "react-native";
-import { Text } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Text, useTheme } from "react-native-paper";
 
 function RegistrationHeader() {
-  const colorScheme = useColorScheme();
+  const theme = useTheme();
   return (
     <View style={styles.headingContainer}>
-      <Text
-        style={[
-          styles.title,
-          { color: colorScheme === "dark" ? "#7cacf8" : "#1F41BB" },
-        ]}
-      >
+      <Text style={[styles.title, { color: theme.colors.onSurfaceVariant }]}>
         Warrager
       </Text>
     </View>

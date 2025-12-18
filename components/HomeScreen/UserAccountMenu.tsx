@@ -26,10 +26,10 @@ function UserAccountMenu({
           <TouchableOpacity onPress={() => setVisible(true)}>
             <Avatar.Text
               label={avatarLabel}
-              color="white"
+              color="#ffffff"
               size={54}
               style={{
-                backgroundColor: `${profileColor ? profileColor : "red"}`,
+                backgroundColor: `${profileColor ? profileColor : "#FF0000"}`,
               }}
             />
           </TouchableOpacity>

@@ -1,7 +1,7 @@
 import { StyleSheet, useColorScheme, View } from "react-native";
 import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 
-function LoadingScreen() {
+function SplashScreenComponent() {
   const colorScheme = useColorScheme();
   const theme = useTheme();
   return (
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoadingScreen;
+export default SplashScreenComponent;

@@ -1,18 +1,21 @@
-import { auth } from "@/firebaseConfig";
+import { auth, database } from "@/firebaseConfig";
+import { useRouter } from "expo-router";
 import { FirebaseError } from "firebase/app";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { ref, set } from "firebase/database";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Platform, StyleSheet, useColorScheme, View } from "react-native";
-import { ActivityIndicator, Text, TextInputProps } from "react-native-paper";
+import { Platform, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Text,
+  TextInputProps,
+  useTheme,
+} from "react-native-paper";
 import EmailField from "../FormComponents/EmailField";
 import FormButton from "../FormComponents/FormButton";
 import PasswordField from "../FormComponents/PasswordField";
 import SectionTitle from "../SectionTitle";
-
-type Props = {
-  onLogin: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
 type FormData = {
   email: string;
@@ -20,11 +23,13 @@ type FormData = {
   confirmPassword: string;
 };
 
-function RegistrationForm({ onLogin }: Props) {
+const randomMC = require("random-material-color");
+
+function RegistrationForm() {
+  const router = useRouter();
   const [signUpError, setSignUpError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const colorScheme = useColorScheme();
-
+  const theme = useTheme();
   const {
     control,
     handleSubmit,
@@ -38,13 +43,16 @@ function RegistrationForm({ onLogin }: Props) {
       confirmPassword: "",
     },
   });
-
   async function OnRegister(data: FormData) {
     try {
       setSignUpError("");
       setIsLoading(true);
       await createUserWithEmailAndPassword(auth, data.email, data.password);
-      onLogin(false);
+      const userId = auth.currentUser?.uid;
+      const profileColor = randomMC.getColor();
+      await set(ref(database, "users/" + userId), {
+        profile_color: profileColor,
+      });
     } catch (e) {
       if (e instanceof FirebaseError) {
         let errorCode = e.code;
@@ -68,7 +76,10 @@ function RegistrationForm({ onLogin }: Props) {
 
   return (
     <View style={styles.fieldContainer}>
-      <SectionTitle text="Create your account" style={styles.formTitle} />
+      <SectionTitle
+        text="Create your account"
+        style={[styles.formTitle, { color: theme.colors.onSurfaceVariant }]}
+      />
       <EmailField
         control={control}
         componentName="email"
@@ -121,19 +132,22 @@ function RegistrationForm({ onLogin }: Props) {
         text="Sign Up"
       />
       {isLoading && (
-        <ActivityIndicator
-          animating={true}
-          color={colorScheme === "dark" ? "#7cacf8" : "#1F41BB"}
-        />
+        <ActivityIndicator animating={true} color={theme.colors.onSurface} />
       )}
       {signUpError !== "" && (
         <View style={styles.failedMessageContainer}>
-          <Text style={styles.failedMessage}>{signUpError}</Text>
+          <Text style={[styles.failedMessage, { color: theme.colors.error }]}>
+            {signUpError}
+          </Text>
         </View>
       )}
       <View style={styles.loginLinkContainer}>
         <Text>Already have an account?</Text>
-        <FormButton text="Login" mode="text" onPress={() => onLogin(false)} />
+        <FormButton
+          text="Login"
+          mode="text"
+          onPress={() => router.navigate("/LoginScreen")}
+        />
       </View>
     </View>
   );
@@ -147,7 +161,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   failedMessage: {
-    color: "red",
     fontWeight: "bold",
     fontSize: 15,
   },
@@ -157,7 +170,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   formTitle: {
-    color: "#1F41BB",
     fontSize: 20,
     fontWeight: Platform.OS === "ios" ? "500" : "bold",
   },

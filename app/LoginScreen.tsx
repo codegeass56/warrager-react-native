@@ -1,21 +1,14 @@
 import LoginForm from "@/components/LoginScreen/LoginForm";
 import LoginHeader from "@/components/LoginScreen/LoginHeader";
 import { StyleSheet, View } from "react-native";
-import { PaperProvider } from "react-native-paper";
 
-type Props = {
-  onRegister: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-function LoginScreen({ onRegister }: Props) {
+function LoginScreen() {
   return (
-    <PaperProvider>
-      <View style={styles.loginScreenContainer}>
-        <LoginHeader />
-        <LoginForm onRegister={onRegister} />
-        <View style={styles.formGap} />
-      </View>
-    </PaperProvider>
+    <View style={styles.loginScreenContainer}>
+      <LoginHeader />
+      <LoginForm />
+      <View style={styles.formGap} />
+    </View>
   );
 }
 

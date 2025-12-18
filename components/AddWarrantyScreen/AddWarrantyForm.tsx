@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Platform, StyleSheet, View } from "react-native";
-import { Text } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import DatePicker from "../FormComponents/DatePicker";
 import EmailField from "../FormComponents/EmailField";
 import FormButton from "../FormComponents/FormButton";
@@ -55,7 +55,7 @@ function AddWarrantyForm() {
   const params = useLocalSearchParams<{ imageUri: string }>();
   const router = useRouter();
   const currentUser = auth.currentUser;
-
+  const theme = useTheme();
   const {
     control,
     handleSubmit,
@@ -173,7 +173,13 @@ function AddWarrantyForm() {
 
   return (
     <View style={styles.fieldContainer}>
-      <SectionTitle text="Product Details" style={styles.productDetailsTitle} />
+      <SectionTitle
+        text="Product Details"
+        style={[
+          styles.productDetailsTitle,
+          { color: theme.colors.onSurfaceVariant },
+        ]}
+      />
 
       <TextField
         control={control}
@@ -230,7 +236,7 @@ function AddWarrantyForm() {
             style={styles.selectPictureBtn}
             onPress={() => {
               router.navigate({
-                pathname: `/screens/CameraScreen`,
+                pathname: `/home/CameraScreen`,
                 params: {
                   previousScreenName: "AddWarrantyScreen",
                 },
@@ -254,7 +260,7 @@ function AddWarrantyForm() {
               style={styles.selectPictureBtn}
               onPress={() => {
                 router.navigate({
-                  pathname: `/screens/CameraScreen`,
+                  pathname: `/home/CameraScreen`,
                   params: {
                     previousScreenName: "AddWarrantyScreen",
                   },
@@ -266,6 +272,7 @@ function AddWarrantyForm() {
               mode="contained"
               style={styles.selectPictureBtn}
               onPress={() => {
+                router.setParams({ imageUri: undefined });
                 setImageUri("");
               }}
             />
@@ -273,7 +280,13 @@ function AddWarrantyForm() {
         </View>
       ) : null}
 
-      <SectionTitle text="Store Details" style={styles.storeDetailsTitle} />
+      <SectionTitle
+        text="Store Details"
+        style={[
+          styles.storeDetailsTitle,
+          { color: theme.colors.onSurfaceVariant },
+        ]}
+      />
       <TextField
         control={control}
         componentName={STORE_NAME_FIELD_NAME}
@@ -317,13 +330,11 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   productDetailsTitle: {
-    color: "#1F41BB",
     fontSize: 20,
     fontWeight: Platform.OS === "ios" ? "500" : "bold",
     alignSelf: "center",
   },
   storeDetailsTitle: {
-    color: "#1F41BB",
     fontSize: 20,
     alignSelf: "center",
     marginTop: 30,

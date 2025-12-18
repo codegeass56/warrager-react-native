@@ -103,7 +103,10 @@ export default function Product({
                 icon="pencil"
                 size={40}
                 onPress={() =>
-                  router.push(`/screens/home/edit-warranty/${productId}`)
+                  router.navigate({
+                    pathname: `/home/edit-warranty/[productId]`,
+                    params: { productId },
+                  })
                 }
                 iconColor="white"
                 style={[
@@ -157,7 +160,7 @@ export default function Product({
                   text="No Image Provided"
                   style={styles.noImageText}
                 />
-                <Icon source={"close"} size={40} color="red" />
+                <Icon source={"close"} size={40} color="#FF0000" />
               </View>
             </View>
           )}
@@ -176,34 +179,34 @@ export default function Product({
             <Text
               style={[
                 styles.productName,
-                { color: colorScheme === "light" ? "#000" : "#7cacf8" },
+                { color: colorScheme === "light" ? "#000000" : "#7cacf8" },
               ]}
               numberOfLines={2}
             >
               {productName}
             </Text>
             <Text
-              style={{ color: colorScheme === "light" ? "#000" : "#7cacf8" }}
+              style={{ color: colorScheme === "light" ? "#000000" : "#7cacf8" }}
             >
               Brand: {brand}
             </Text>
             <Text
-              style={{ color: colorScheme === "light" ? "#000" : "#7cacf8" }}
+              style={{ color: colorScheme === "light" ? "#000000" : "#7cacf8" }}
             >
               Date of Expiry: {expiryDate}
             </Text>
             <Text
-              style={{ color: colorScheme === "light" ? "#000" : "#7cacf8" }}
+              style={{ color: colorScheme === "light" ? "#000000" : "#7cacf8" }}
             >
               Date of Purchase: {dateOfPurchase}
             </Text>
             <Text
-              style={{ color: colorScheme === "light" ? "#000" : "#7cacf8" }}
+              style={{ color: colorScheme === "light" ? "#000000" : "#7cacf8" }}
             >
               Warranty Period: {warrantyPeriod} {warrantyDurationType}
             </Text>
             <Text
-              style={{ color: colorScheme === "light" ? "#000" : "#7cacf8" }}
+              style={{ color: colorScheme === "light" ? "#000000" : "#7cacf8" }}
             >
               Price: {currencyType} {price}
             </Text>
@@ -250,7 +253,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: "100%",
     textAlign: "center",
-    color: "#7cacf8",
   },
   rightActions: {
     flexDirection: "row",
@@ -267,8 +269,5 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     margin: 0,
     width: 70,
-  },
-  textColor: {
-    color: "#7cacf8",
   },
 });

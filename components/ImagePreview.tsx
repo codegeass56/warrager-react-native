@@ -1,7 +1,6 @@
 import { Image } from "expo-image";
 import { router } from "expo-router";
-import { Platform, StyleSheet, useColorScheme, View } from "react-native";
-import { useTheme } from "react-native-paper";
+import { Platform, StyleSheet, View } from "react-native";
 import FormButton from "./FormComponents/FormButton";
 import VerticalDivider from "./VerticalDivider";
 
@@ -18,25 +17,13 @@ function ImagePreview({
   previousScreenName,
   productId,
 }: Props) {
-  const colorScheme = useColorScheme();
-  const theme = useTheme();
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj\
     [ayj[j[fQayWCoeoeaya} j[ayfQa{oLj ? j[WVj[ayayj[fQoff7azayj[ayj[j[\
     ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   return (
-    <View
-      style={[
-        styles.imagePreviewContainer,
-        {
-          backgroundColor:
-            colorScheme === "light"
-              ? theme.colors.surface
-              : theme.colors.onSurface,
-        },
-      ]}
-    >
+    <View style={styles.imagePreviewContainer}>
       <View style={styles.imageContainer}>
         <Image
           style={styles.image}
@@ -63,12 +50,12 @@ function ImagePreview({
               // Pass and merge params back to home screen
               if (previousScreenName === "AddWarrantyScreen") {
                 router.dismissTo({
-                  pathname: "/screens/home/add-warranty/AddWarrantyScreen",
+                  pathname: "/home/add-warranty/AddWarrantyScreen",
                   params: { imageUri },
                 });
               } else if (previousScreenName === "EditWarrantyScreen") {
                 router.dismissTo({
-                  pathname: `/screens/home/edit-warranty/[productId]`,
+                  pathname: `/home/edit-warranty/[productId]`,
                   params: { productId, imageUri },
                 });
               }
