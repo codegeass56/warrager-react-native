@@ -20,6 +20,7 @@ function UserAccountMenu({
   return (
     <View style={style}>
       <Menu
+        key={Number(visible)}
         visible={visible}
         onDismiss={() => setVisible(false)}
         anchor={

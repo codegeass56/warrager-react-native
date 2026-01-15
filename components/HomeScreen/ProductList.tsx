@@ -27,6 +27,7 @@ export default function ProductList({
     <View style={styles.container}>
       <View style={styles.sortDropdownContainer}>
         <Menu
+          key={Number(showSortMenu)}
           visible={showSortMenu}
           onDismiss={() => setShowSortMenu(false)}
           anchor={
