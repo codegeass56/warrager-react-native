@@ -5,10 +5,8 @@ import { ref as dbRefMethod, update } from "firebase/database";
 import { deleteObject, ref as storageRefMethod } from "firebase/storage";
 import { useRef } from "react";
 import { Alert, StyleSheet, useColorScheme, View } from "react-native";
-import {
-  GestureHandlerRootView,
-  Swipeable,
-} from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import { Icon, IconButton, Text, useTheme } from "react-native-paper";
 import SectionTitle from "../SectionTitle";
 import VerticalDivider from "../VerticalDivider";
@@ -45,8 +43,8 @@ export default function Product({
   const router = useRouter();
   const colorScheme = useColorScheme();
   const theme = useTheme();
-  const swipeableRef = useRef<Swipeable>(null);
   const currentUser = auth.currentUser;
+  const swipeableRef = useRef<React.ComponentRef<typeof Swipeable>>(null);
 
   if (closeSwipeable) {
     swipeableRef.current?.close();
