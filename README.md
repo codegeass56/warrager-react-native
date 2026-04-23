@@ -1,21 +1,21 @@
 # Warrager
 
-A warranty management app built for Android and IOS with React Native, Expo and Firebase.
+A warranty management app built for Android and iOS with React Native, Expo, and Firebase.
 
 ## Features
 
 - User login and registration with email and password.
-- Adding, viewing, editing and deleting warranty data including product and store details.
+- Adding, viewing, editing, and deleting warranty data, including product and store details.
 - Filtering the list of products by showing some or all product brands.
-- Sorting products by recently added, last modified or title.
-- Searching for products (in the search bar) by name, data or price.
+- Sorting products by recently added, last modified, or title.
+- Searching for products (in the search bar) by name, date, or price.
 - Intuitive UI built using Material Design components and gesture controls.
 - Dark mode that triggers automatically based on device settings.
 - Responsive form validation with clear feedback when inputting and submitting data.
 
 ## What I learned
 
-This project was my first exposure to building a cross-platform application using React Native with Expo. It allowed me to apply my skills in React to build a full-featured and user-facing mobile application. In addition, I had to overcome a number of key challenges, including:
+This project was my first exposure to building a cross-platform application using React Native with Expo. It allowed me to apply my skills in React to build a full-featured and user-facing mobile application. In addition, I had to overcome numerous key challenges, including:
 
 - **State management**: I learned to manage complex application state to ensure data consistency across multiple components.
 - **Database integration**: This project provided hands-on experience with asynchronous data handling and CRUD operations using Firebase Realtime Database.
