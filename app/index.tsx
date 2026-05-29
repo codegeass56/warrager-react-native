@@ -12,10 +12,10 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in
-        router.navigate("/home");
+        router.replace("/home");
       } else {
         // User is signed out
-        router.navigate("/LoginScreen");
+        router.replace("/LoginScreen");
       }
       setIsLoading(false);
     });
