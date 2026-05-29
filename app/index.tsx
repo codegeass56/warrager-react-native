@@ -9,7 +9,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in
         router.replace("/home");
