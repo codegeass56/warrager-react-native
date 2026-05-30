@@ -85,6 +85,8 @@ function HomeScreen() {
   }
 
   useEffect(() => {
+    if (!currentUser?.uid) return;
+
     function getProfileData() {
       get(child(ref(database), `users/${currentUser?.uid}`))
         .then((snapshot) => {
@@ -133,7 +135,7 @@ function HomeScreen() {
         });
     }
     getProfileData();
-  }, []);
+  }, [currentUser?.uid]);
 
   async function onLogout() {
     try {
