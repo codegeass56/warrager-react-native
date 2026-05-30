@@ -19,7 +19,7 @@ export default function App() {
       }
       setIsLoading(false);
     });
-  }, []);
+  }, [router]);
 
   if (isLoading) {
     return <SplashScreenComponent />;
