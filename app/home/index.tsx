@@ -64,7 +64,7 @@ function HomeScreen() {
                   id: key,
                   ...snapshot.val().warranties[key],
                 };
-              })
+              }),
             );
           } else {
             setProductsList([]);
@@ -103,22 +103,25 @@ function HomeScreen() {
           }
 
           if (snapshot.val().warranties) {
-            setProductsList(
-              Object.keys(snapshot.val().warranties).map((key) => {
+            const fetchedProducts = Object.keys(snapshot.val().warranties).map(
+              (key) => {
                 return {
                   id: key,
                   ...snapshot.val().warranties[key],
                 };
-              })
+              },
             );
-            setBrands(
-              productsList.slice().reduce((acc: BrandObj, product) => {
+            setProductsList(fetchedProducts);
+            const derivedBrands = fetchedProducts.reduce(
+              (acc: BrandObj, product) => {
                 if (!acc[product.productBrand]) {
                   acc[product.productBrand] = false;
                 }
                 return acc;
-              }, {})
+              },
+              {},
             );
+            setBrands(derivedBrands);
           }
         })
         .catch((error) => {
@@ -167,7 +170,7 @@ function HomeScreen() {
           .toLowerCase()
           .trim()
           .includes(searchQuery.toLowerCase().trim()) ||
-        p.productPrice.includes(searchQuery.trim())
+        p.productPrice.includes(searchQuery.trim()),
     );
     uniqueProducts = getUniqueBrandsWithId(searchedProducts);
   } else {
@@ -182,7 +185,7 @@ function HomeScreen() {
     });
   } else if (sortOrder === "Title") {
     searchedProducts.sort((p1, p2) =>
-      p1.productName.localeCompare(p2.productName)
+      p1.productName.localeCompare(p2.productName),
     );
   } else if (sortOrder === "Last Modified") {
     searchedProducts.sort((p1, p2) => {
@@ -195,7 +198,7 @@ function HomeScreen() {
 
   if (Object.values(brands).some((brand) => brand === true)) {
     searchedProducts = searchedProducts.filter(
-      (product) => brands[product.productBrand] === true
+      (product) => brands[product.productBrand] === true,
     );
   }
 
