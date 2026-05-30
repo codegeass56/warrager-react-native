@@ -7,7 +7,7 @@ import { auth, database } from "@/firebaseConfig";
 import { useNavigation, useRouter } from "expo-router";
 import { signOut } from "firebase/auth";
 import { child, get, ref } from "firebase/database";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { FAB, useTheme } from "react-native-paper";
@@ -42,16 +42,7 @@ function HomeScreen() {
   let searchedProducts: Product[] = productsList.slice();
   let uniqueProducts: Product[];
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getProducts();
-    });
-
-    // Return the function to unsubscribe from the event so it gets removed on unmount
-    return unsubscribe;
-  }, [navigation]);
-
-  function getProducts() {
+  const getProducts = useCallback(() => {
     setCloseSwipeable(true);
     setRefreshingProductList(true);
     get(child(ref(database), `users/${currentUser?.uid}`))
@@ -82,7 +73,16 @@ function HomeScreen() {
         setRefreshingProductList(false);
         setCloseSwipeable(false);
       });
-  }
+  }, [currentUser?.uid]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getProducts();
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation, getProducts]);
 
   useEffect(() => {
     if (!currentUser?.uid) return;
