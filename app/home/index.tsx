@@ -43,9 +43,11 @@ function HomeScreen() {
   let uniqueProducts: Product[];
 
   const getProducts = useCallback(() => {
+    if (!currentUser?.uid) return;
+
     setCloseSwipeable(true);
     setRefreshingProductList(true);
-    get(child(ref(database), `users/${currentUser?.uid}`))
+    get(child(ref(database), `users/${currentUser.uid}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           if (snapshot.val().warranties) {
@@ -85,10 +87,10 @@ function HomeScreen() {
   }, [navigation, getProducts]);
 
   useEffect(() => {
-    if (!currentUser?.uid) return;
-
     function getProfileData() {
-      get(child(ref(database), `users/${currentUser?.uid}`))
+      if (!currentUser?.uid) return;
+
+      get(child(ref(database), `users/${currentUser.uid}`))
         .then((snapshot) => {
           if (!snapshot.val()) {
             //TODO: Pass error to custom error screen
