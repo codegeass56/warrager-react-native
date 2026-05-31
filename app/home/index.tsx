@@ -42,6 +42,10 @@ function HomeScreen() {
   let searchedProducts: Product[] = productsList.slice();
   let uniqueBrands: string[];
 
+  useEffect(() => {
+    console.log(brands);
+  }, [brands]);
+
   const getProducts = useCallback(() => {
     if (!currentUser?.uid) return;
 
@@ -51,14 +55,25 @@ function HomeScreen() {
       .then((snapshot) => {
         if (snapshot.exists()) {
           if (snapshot.val().warranties) {
-            setProductsList(
-              Object.keys(snapshot.val().warranties).map((key) => {
+            const fetchedProducts = Object.keys(snapshot.val().warranties).map(
+              (key) => {
                 return {
                   id: key,
                   ...snapshot.val().warranties[key],
                 };
-              }),
+              },
             );
+            setProductsList(fetchedProducts);
+            const derivedBrands = fetchedProducts.reduce(
+              (acc: BrandObj, product) => {
+                if (!acc[product.productBrand]) {
+                  acc[product.productBrand] = false;
+                }
+                return acc;
+              },
+              {},
+            );
+            setBrands(derivedBrands);
           } else {
             setProductsList([]);
           }
