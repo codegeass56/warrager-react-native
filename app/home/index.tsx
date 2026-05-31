@@ -55,25 +55,23 @@ function HomeScreen() {
       .then((snapshot) => {
         if (snapshot.exists()) {
           if (snapshot.val().warranties) {
-            const fetchedProducts = Object.keys(snapshot.val().warranties).map(
-              (key) => {
-                return {
-                  id: key,
-                  ...snapshot.val().warranties[key],
-                };
-              },
-            );
+            const fetchedProducts: Product[] = Object.keys(
+              snapshot.val().warranties,
+            ).map((key) => {
+              return {
+                id: key,
+                ...snapshot.val().warranties[key],
+              };
+            });
             setProductsList(fetchedProducts);
-            const derivedBrands = fetchedProducts.reduce(
-              (acc: BrandObj, product) => {
-                if (!acc[product.productBrand]) {
-                  acc[product.productBrand] = false;
-                }
-                return acc;
-              },
-              {},
-            );
-            setBrands(derivedBrands);
+            setBrands((prevBrands) => {
+              const nextBrands: BrandObj = {};
+              fetchedProducts.forEach((product) => {
+                const brandName = product.productBrand;
+                nextBrands[brandName] = prevBrands[brandName] ?? false;
+              });
+              return nextBrands;
+            });
           } else {
             setProductsList([]);
             setBrands({});
