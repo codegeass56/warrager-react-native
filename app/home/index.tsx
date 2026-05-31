@@ -40,7 +40,7 @@ function HomeScreen() {
     currentUser?.email?.charAt(0).toUpperCase() ||
     "Er";
   let searchedProducts: Product[] = productsList.slice();
-  let uniqueProducts: Product[];
+  let uniqueBrands: string[];
 
   const getProducts = useCallback(() => {
     if (!currentUser?.uid) return;
@@ -151,16 +151,14 @@ function HomeScreen() {
     }
   }
 
-  function getUniqueBrandsWithId(products: Product[]) {
+  function getUniqueBrands(products: Product[]): string[] {
     const brandSet: Set<string> = new Set();
-    return products.filter((product) => {
+    products.forEach((product) => {
       if (!brandSet.has(product.productBrand)) {
         brandSet.add(product.productBrand);
-        return true;
       }
-
-      return false;
     });
+    return Array.from(brandSet);
   }
 
   if (searchQuery !== "") {
@@ -176,9 +174,9 @@ function HomeScreen() {
           .includes(searchQuery.toLowerCase().trim()) ||
         p.productPrice.includes(searchQuery.trim()),
     );
-    uniqueProducts = getUniqueBrandsWithId(searchedProducts);
+    uniqueBrands = getUniqueBrands(searchedProducts);
   } else {
-    uniqueProducts = getUniqueBrandsWithId(productsList);
+    uniqueBrands = getUniqueBrands(productsList); //update name of uniqueProducts and function name
   }
 
   if (sortOrder === "Recently Added") {
@@ -222,7 +220,7 @@ function HomeScreen() {
         />
         <View style={styles.searchFilterContainer}>
           <SearchBar control={control} />
-          <Filter products={uniqueProducts} onFilter={setBrands} />
+          <Filter brands={uniqueBrands} onFilter={setBrands} />
         </View>
         {searchedProducts.length === 0 ? (
           <View style={styles.noProductsTextContainer}>
