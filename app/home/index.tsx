@@ -76,6 +76,7 @@ function HomeScreen() {
             setBrands(derivedBrands);
           } else {
             setProductsList([]);
+            setBrands({});
           }
         } else {
           //TODO: Pass error to custom error screen
