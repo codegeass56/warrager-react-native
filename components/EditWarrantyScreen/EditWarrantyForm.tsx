@@ -79,8 +79,8 @@ function EditWarrantyForm({ productId }: { productId: string }) {
       get(
         child(
           dbRefMethod(database),
-          `users/${currentUser?.uid}/warranties/${productId}`
-        )
+          `users/${currentUser?.uid}/warranties/${productId}`,
+        ),
       )
         .then((snapshot) => {
           if (snapshot.exists()) {
@@ -112,17 +112,17 @@ function EditWarrantyForm({ productId }: { productId: string }) {
     switch (data[WARRANTY_DURATION_TYPE_FIELD_NAME]) {
       case "Years":
         dateOfExpiry = dateOfPurchase.setFullYear(
-          dateOfPurchase.getFullYear() + warrantyPeriod
+          dateOfPurchase.getFullYear() + warrantyPeriod,
         );
         break;
       case "Months":
         dateOfExpiry = dateOfPurchase.setMonth(
-          dateOfPurchase.getMonth() + warrantyPeriod
+          dateOfPurchase.getMonth() + warrantyPeriod,
         );
         break;
       case "Days":
         dateOfExpiry = dateOfPurchase.setDate(
-          dateOfPurchase.getDate() + warrantyPeriod
+          dateOfPurchase.getDate() + warrantyPeriod,
         );
         break;
     }
@@ -152,7 +152,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
       setIsLoading(true);
       let storageRef = storageRefMethod(
         storage,
-        `${currentUser?.uid}/images/${productId}`
+        `${currentUser?.uid}/images/${productId}`,
       );
       if (imageUri !== "") {
         const response = await fetch(imageUri);
@@ -428,31 +428,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  currencyContainer: {
-    flexDirection: "row",
-  },
-  currencyDropdownWidth: {
-    width: 100,
-  },
-  priceInput: {
-    flex: 1,
-  },
   dateOfPurchaseText: {
     fontSize: 16,
     marginRight: 10,
-  },
-  warrantyPeriodContainer: {
-    flexDirection: "row",
-  },
-  warrantyPeriodInput: {
-    flex: 1,
-  },
-  androidDatePickerBtn: {
-    borderRadius: 7,
-  },
-  androidDatePickerBtnText: {
-    fontSize: 17,
-    fontWeight: "bold",
   },
   addWarrantyScreenContainer: {
     flex: 1,
