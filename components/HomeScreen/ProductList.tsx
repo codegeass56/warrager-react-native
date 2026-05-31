@@ -108,9 +108,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  search: {
-    alignItems: "center",
-  },
   sortDropdownContainer: {
     alignSelf: "flex-end",
   },

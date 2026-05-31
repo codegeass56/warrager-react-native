@@ -26,14 +26,6 @@ function Filter({ products, onFilter }: Props) {
 
 const styles = StyleSheet.create({
   container: { flexDirection: "row", alignItems: "center", columnGap: 7 },
-  filterBtnSize: {
-    width: 90,
-    height: "auto",
-  },
-  filterBtnStyle: {
-    borderRadius: 5,
-    margin: 0,
-  },
   verticalDivider: {
     height: "100%",
     width: 1,

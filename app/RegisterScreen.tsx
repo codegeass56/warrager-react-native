@@ -30,11 +30,6 @@ const styles = StyleSheet.create({
   formGap: {
     height: 30,
   },
-  registrationFormContainer: {
-    flex: 1,
-    height: "100%",
-    width: "100%",
-  },
 });
 
 export default RegisterScreen;

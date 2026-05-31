@@ -70,11 +70,6 @@ function ImagePreview({
 }
 
 const styles = StyleSheet.create({
-  closeBtnContainer: {
-    width: "100%",
-    alignItems: "flex-start",
-    justifyContent: "center",
-  },
   imagePreviewContainer: {
     flex: 1,
     alignItems: "center",
@@ -111,11 +106,6 @@ const styles = StyleSheet.create({
   },
   doneBtn: {
     borderRadius: 10,
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
   },
 });
 
