@@ -165,9 +165,7 @@ function HomeScreen() {
   function getUniqueBrands(products: Product[]): string[] {
     const brandSet: Set<string> = new Set();
     products.forEach((product) => {
-      if (!brandSet.has(product.productBrand)) {
-        brandSet.add(product.productBrand);
-      }
+      brandSet.add(product.productBrand);
     });
     return Array.from(brandSet);
   }
