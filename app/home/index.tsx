@@ -15,7 +15,7 @@ import SplashScreenComponent from "../../components/SplashScreenComponent";
 
 function HomeScreen() {
   const [profileColor, setProfileColor] = useState("red");
-  const [isFetchingProducts, setIsFetchingProducts] = useState(true);
+  const [isInitialMount, setIsInitialMount] = useState(true);
   const [productsList, setProductsList] = useState<Product[]>([]);
   const [refreshingProductList, setRefreshingProductList] = useState(false);
   const [brands, setBrands] = useState<BrandObj>({});
@@ -92,14 +92,14 @@ function HomeScreen() {
   }, [currentUser?.uid]);
 
   useEffect(() => {
-    if (isFetchingProducts) return;
+    if (isInitialMount) return;
     const unsubscribe = navigation.addListener("focus", () => {
       getProducts();
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
-  }, [navigation, getProducts, isFetchingProducts]);
+  }, [navigation, getProducts, isInitialMount]);
 
   useEffect(() => {
     function getProfileData() {
@@ -148,7 +148,7 @@ function HomeScreen() {
           console.error(error);
         })
         .finally(() => {
-          setIsFetchingProducts(false);
+          setIsInitialMount(false);
         });
     }
     getProfileData();
@@ -219,7 +219,7 @@ function HomeScreen() {
     );
   }
 
-  if (isFetchingProducts) {
+  if (isInitialMount) {
     return <SplashScreenComponent />;
   }
 
