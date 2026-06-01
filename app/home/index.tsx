@@ -162,14 +162,6 @@ function HomeScreen() {
     }
   }
 
-  function getUniqueBrands(products: Product[]): string[] {
-    const brandSet: Set<string> = new Set();
-    products.forEach((product) => {
-      brandSet.add(product.productBrand);
-    });
-    return Array.from(brandSet);
-  }
-
   if (searchQuery !== "") {
     searchedProducts = searchedProducts.filter(
       (p) =>
@@ -184,7 +176,12 @@ function HomeScreen() {
         p.productPrice.includes(searchQuery.trim()),
     );
   }
-  uniqueBrands = getUniqueBrands(searchedProducts);
+
+  const brandSet: Set<string> = new Set();
+  searchedProducts.forEach((product) => {
+    brandSet.add(product.productBrand);
+  });
+  uniqueBrands = Array.from(brandSet);
 
   if (Object.values(brands).some((brand) => brand === true)) {
     searchedProducts = searchedProducts.filter(
