@@ -194,6 +194,12 @@ function HomeScreen() {
     uniqueBrands = getUniqueBrands(productsList); //update name of uniqueProducts and function name
   }
 
+  if (Object.values(brands).some((brand) => brand === true)) {
+    searchedProducts = searchedProducts.filter(
+      (product) => brands[product.productBrand] === true,
+    );
+  }
+
   if (sortOrder === "Recently Added") {
     searchedProducts.sort((p1, p2) => {
       return (
@@ -211,12 +217,6 @@ function HomeScreen() {
         new Date(p1.dateModified).getTime()
       );
     });
-  }
-
-  if (Object.values(brands).some((brand) => brand === true)) {
-    searchedProducts = searchedProducts.filter(
-      (product) => brands[product.productBrand] === true,
-    );
   }
 
   if (isInitialMount) {
