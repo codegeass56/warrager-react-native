@@ -183,10 +183,8 @@ function HomeScreen() {
           .includes(searchQuery.toLowerCase().trim()) ||
         p.productPrice.includes(searchQuery.trim()),
     );
-    uniqueBrands = getUniqueBrands(searchedProducts);
-  } else {
-    uniqueBrands = getUniqueBrands(productsList); //update name of uniqueProducts and function name
   }
+  uniqueBrands = getUniqueBrands(searchedProducts);
 
   if (Object.values(brands).some((brand) => brand === true)) {
     searchedProducts = searchedProducts.filter(
