@@ -92,13 +92,14 @@ function HomeScreen() {
   }, [currentUser?.uid]);
 
   useEffect(() => {
+    if (isFetchingProducts) return;
     const unsubscribe = navigation.addListener("focus", () => {
       getProducts();
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
     return unsubscribe;
-  }, [navigation, getProducts]);
+  }, [navigation, getProducts, isFetchingProducts]);
 
   useEffect(() => {
     function getProfileData() {
