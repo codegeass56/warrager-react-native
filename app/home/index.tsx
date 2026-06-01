@@ -39,8 +39,6 @@ function HomeScreen() {
     currentUser?.displayName?.charAt(0).toUpperCase() ||
     currentUser?.email?.charAt(0).toUpperCase() ||
     "Er";
-  let searchedProducts: Product[] = productsList.slice();
-  let uniqueBrands: string[];
 
   const getProducts = useCallback(() => {
     if (!currentUser?.uid) return;
@@ -162,6 +160,8 @@ function HomeScreen() {
     }
   }
 
+  let searchedProducts: Product[] = productsList.slice();
+
   if (searchQuery !== "") {
     searchedProducts = searchedProducts.filter(
       (p) =>
@@ -176,12 +176,11 @@ function HomeScreen() {
         p.productPrice.includes(searchQuery.trim()),
     );
   }
-
   const brandSet: Set<string> = new Set();
   searchedProducts.forEach((product) => {
     brandSet.add(product.productBrand);
   });
-  uniqueBrands = Array.from(brandSet);
+  const uniqueBrands: string[] = Array.from(brandSet);
 
   if (Object.values(brands).some((brand) => brand === true)) {
     searchedProducts = searchedProducts.filter(
