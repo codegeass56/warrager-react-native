@@ -229,7 +229,11 @@ function HomeScreen() {
         />
         <View style={styles.searchFilterContainer}>
           <SearchBar control={control} />
-          <Filter brands={uniqueBrands} onFilter={setBrands} />
+          <Filter
+            uniqueBrandNames={uniqueBrands}
+            onFilter={setBrands}
+            activeBrands={brands}
+          />
         </View>
         {searchedProducts.length === 0 ? (
           <View style={styles.noProductsTextContainer}>

@@ -1,14 +1,13 @@
-import { useState } from "react";
 import { useColorScheme } from "react-native";
 import { Chip, Icon } from "react-native-paper";
 
 type Props = {
   brand: string;
   onSelect: React.Dispatch<React.SetStateAction<BrandObj>>;
+  isSelected: boolean;
 };
 
-function MaterialChip({ brand, onSelect }: Props) {
-  const [selected, setSelected] = useState(false);
+function MaterialChip({ brand, onSelect, isSelected }: Props) {
   const colorScheme = useColorScheme();
   const textColor = {
     color: colorScheme === "dark" ? "black" : "white",
@@ -16,27 +15,16 @@ function MaterialChip({ brand, onSelect }: Props) {
   return (
     <Chip
       onPress={() => {
-        if (selected) {
-          setSelected(false);
-          onSelect((brands) => {
-            return {
-              ...brands,
-              [brand]: false,
-            };
-          });
-        } else {
-          setSelected(true);
-          onSelect((brands) => {
-            return {
-              ...brands,
-              [brand]: true,
-            };
-          });
-        }
+        onSelect((prevBrands) => {
+          return {
+            ...prevBrands,
+            [brand]: !prevBrands[brand],
+          };
+        });
       }}
-      selected={selected}
+      selected={isSelected}
       icon={() => {
-        if (selected) {
+        if (isSelected) {
           return <Icon source={"close"} size={20} color={textColor.color} />;
         }
       }}

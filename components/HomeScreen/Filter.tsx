@@ -2,11 +2,12 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import MaterialChip from "../MaterialChip";
 
 type Props = {
-  brands: string[];
+  uniqueBrandNames: string[];
   onFilter: React.Dispatch<React.SetStateAction<BrandObj>>;
+  activeBrands: BrandObj;
 };
 
-function Filter({ brands, onFilter }: Props) {
+function Filter({ uniqueBrandNames, onFilter, activeBrands }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.verticalDivider} />
@@ -16,8 +17,13 @@ function Filter({ brands, onFilter }: Props) {
         showsHorizontalScrollIndicator={false}
         scrollEnabled
       >
-        {brands.map((brand) => (
-          <MaterialChip key={brand} onSelect={onFilter} brand={brand} />
+        {uniqueBrandNames.map((brand) => (
+          <MaterialChip
+            key={brand}
+            onSelect={onFilter}
+            brand={brand}
+            isSelected={!!activeBrands[brand]}
+          />
         ))}
       </ScrollView>
     </View>
