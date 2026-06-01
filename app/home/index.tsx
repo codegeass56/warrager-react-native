@@ -42,10 +42,6 @@ function HomeScreen() {
   let searchedProducts: Product[] = productsList.slice();
   let uniqueBrands: string[];
 
-  useEffect(() => {
-    console.log(brands);
-  }, [brands]);
-
   const getProducts = useCallback(() => {
     if (!currentUser?.uid) return;
 
