@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { ref as dbRefMethod, update } from "firebase/database";
 import { deleteObject, ref as storageRefMethod } from "firebase/storage";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Alert, StyleSheet, useColorScheme, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
@@ -46,16 +46,18 @@ export default function Product({
   const currentUser = auth.currentUser;
   const swipeableRef = useRef<React.ComponentRef<typeof Swipeable>>(null);
 
-  if (closeSwipeable) {
-    swipeableRef.current?.close();
-  }
+  useEffect(() => {
+    if (closeSwipeable) {
+      swipeableRef.current?.close();
+    }
+  }, [closeSwipeable]);
 
   async function onDelete() {
     const updates: { [key: string]: any } = {};
     updates[`users/${auth.currentUser?.uid}/warranties/${productId}`] = null;
     let storageRef = storageRefMethod(
       storage,
-      `${currentUser?.uid}/images/${productId}`
+      `${currentUser?.uid}/images/${productId}`,
     );
     try {
       const updateTask = update(dbRefMethod(database), updates);
@@ -86,7 +88,7 @@ export default function Product({
           onPress: () => {},
           style: "cancel",
         },
-      ]
+      ],
     );
   }
 
@@ -220,7 +222,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     borderTopWidth: 1,
-    overflow: "scroll",
     width: "100%",
     height: 300,
   },
