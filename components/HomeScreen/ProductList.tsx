@@ -98,7 +98,8 @@ export default function ProductList({
         keyExtractor={(item) => item.id}
         onRefresh={onRefresh}
         refreshing={refreshing}
-        contentContainerStyle={styles.divider}
+        initialNumToRender={3}
+        maxToRenderPerBatch={10}
       />
     </View>
   );
@@ -111,5 +112,4 @@ const styles = StyleSheet.create({
   sortDropdownContainer: {
     alignSelf: "flex-end",
   },
-  divider: { gap: 10 },
 });
