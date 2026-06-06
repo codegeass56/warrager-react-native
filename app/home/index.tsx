@@ -43,7 +43,6 @@ function HomeScreen() {
   const getProducts = useCallback(() => {
     if (!currentUser?.uid) return;
 
-    setCloseSwipeable(true);
     setRefreshingProductList(true);
     get(child(ref(database), `users/${currentUser.uid}`))
       .then((snapshot) => {
@@ -88,7 +87,10 @@ function HomeScreen() {
   useEffect(() => {
     if (isInitialMount) return;
     const unsubscribe = navigation.addListener("focus", () => {
-      getProducts();
+      setCloseSwipeable(true);
+      requestAnimationFrame(() => {
+        getProducts();
+      });
     });
 
     // Return the function to unsubscribe from the event so it gets removed on unmount
