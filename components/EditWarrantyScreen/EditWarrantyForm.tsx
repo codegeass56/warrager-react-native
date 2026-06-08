@@ -154,6 +154,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
         storage,
         `${currentUser?.uid}/images/${productId}`,
       );
+
       if (imageUri !== "") {
         const response = await fetch(imageUri);
         const blob = await response.blob();
@@ -163,7 +164,10 @@ function EditWarrantyForm({ productId }: { productId: string }) {
 
         warrantyData["imageUrl"] = imageUrl;
       } else {
-        await deleteObject(storageRef);
+        const hasImage = await getDownloadURL(storageRef)
+          .then(() => true)
+          .catch(() => false);
+        if (hasImage) await deleteObject(storageRef);
       }
       const updates: { [key: string]: any } = {};
       updates["/users/" + currentUser?.uid + "/warranties/" + productId] =
