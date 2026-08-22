@@ -59,7 +59,7 @@ function TextField({
             autoCapitalize={autoCapitalize}
           />
           {error?.message && (
-            <HelperText type="error" style={{ paddingLeft: 0 }}>
+            <HelperText type="error" style={{ paddingLeft: 16 }}>
               {error.message}
             </HelperText>
           )}
