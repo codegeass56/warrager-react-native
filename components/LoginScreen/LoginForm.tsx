@@ -43,6 +43,7 @@ function LoginForm() {
       setLoginError("");
       setIsLoading(true);
       await signInWithEmailAndPassword(auth, data.email, data.password);
+      router.replace("/");
     } catch (e) {
       if (e instanceof FirebaseError) {
         let errorCode = e.code;
