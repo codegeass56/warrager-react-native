@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Keyboard, Platform, StyleSheet, View } from "react-native";
-import { ActivityIndicator, Text, useTheme } from "react-native-paper";
+import { Text, useTheme } from "react-native-paper";
 import ErrorMessage from "../ErrorMessage";
 import EmailField from "../FormComponents/EmailField";
 import FormButton from "../FormComponents/FormButton";
@@ -48,7 +48,7 @@ function LoginForm() {
       if (e instanceof FirebaseError) {
         switch (e.code) {
           case "auth/user-disabled":
-          setLoginError("This account has been deactivated.");
+            setLoginError("This account has been deactivated.");
             break;
           case "auth/wrong-password":
           case "auth/invalid-credential":
@@ -58,7 +58,7 @@ function LoginForm() {
             setLoginError("Invalid email address.");
             break;
           case "auth/user-not-found":
-          setLoginError("User not found. Did you sign up?");
+            setLoginError("User not found. Did you sign up?");
             break;
           default:
             setLoginError(e.message);
@@ -103,18 +103,14 @@ function LoginForm() {
         placeholderText="Enter your password"
       />
       <FormButton
-        text="Login"
+        text={isLoading ? "Logging in..." : "Login"}
         mode="contained"
         onPress={handleSubmit(onLogin)}
+        isLoading={isLoading}
       />
-      {isLoading ? (
-        <ActivityIndicator animating={true} color={theme.colors.onSurface} />
-      ) : null}
-
       {loginError !== "" ? <ErrorMessage message={loginError} /> : null}
-
       <View style={styles.registerLinkContainer}>
-        <Text>Don't have an account?</Text>
+        <Text>Don&apos;t have an account?</Text>
         <FormButton
           text="Sign up"
           mode="text"
