@@ -3,6 +3,7 @@ import Filter from "@/components/HomeScreen/Filter";
 import ProductList from "@/components/HomeScreen/ProductList";
 import SearchBar from "@/components/HomeScreen/SearchBar";
 import SectionTitle from "@/components/SectionTitle";
+import { useAuth } from "@/context/AuthContext";
 import { auth, database } from "@/firebaseConfig";
 import { useNavigation, useRouter } from "expo-router";
 import { signOut } from "firebase/auth";
@@ -13,7 +14,7 @@ import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { FAB, useTheme } from "react-native-paper";
 
 function HomeScreen() {
-  const [profileColor, setProfileColor] = useState("red");
+  const { profileColor } = useAuth();
   const [isInitialMount, setIsInitialMount] = useState(true);
   const [productsList, setProductsList] = useState<Product[]>([]);
   const [refreshingProductList, setRefreshingProductList] = useState(false);
@@ -106,14 +107,6 @@ function HomeScreen() {
             //TODO: Pass error to custom error screen
             console.log("No data available");
             return;
-          }
-
-          if (snapshot.val().profile_color) {
-            setProfileColor(snapshot.val().profile_color);
-          } else {
-            //TODO: Show toast to user
-            console.log("Profile color unavailable");
-            setProfileColor("red");
           }
 
           if (snapshot.val().warranties) {

@@ -1,24 +1,38 @@
-import { auth } from "@/firebaseConfig";
+import { auth, database } from "@/firebaseConfig";
 import { onAuthStateChanged, User } from "firebase/auth";
+import { child, get, ref } from "firebase/database";
 import { createContext, use, useEffect, useState } from "react";
 
 const AuthContext = createContext<{
   user: User | null;
   isLoading: boolean;
+  profileColor: string;
 }>({
   user: null,
   isLoading: true,
+  profileColor: "red",
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [profileColor, setProfileColor] = useState("red");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         // User is signed in
         setUser(user);
+        try {
+          const snapshot = await get(
+            child(ref(database), `users/${user.uid}/profile_color`),
+          );
+          setProfileColor(snapshot.exists() ? snapshot.val() : "red");
+        } catch (e) {
+          //TODO: Show toast to user
+          console.error(e);
+          setProfileColor("red");
+        }
       } else {
         // User is signed out
         setUser(null);
@@ -29,7 +43,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
-  return <AuthContext value={{ user, isLoading }}>{children}</AuthContext>;
+  return (
+    <AuthContext value={{ user, isLoading, profileColor }}>
+      {children}
+    </AuthContext>
+  );
 }
 
 export function useAuth() {
