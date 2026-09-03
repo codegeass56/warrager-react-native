@@ -29,7 +29,7 @@ function LoginForm() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormData>({
     mode: "onChange",
     defaultValues: {
       [EMAIL_FIELD_NAME]: "",
@@ -46,20 +46,22 @@ function LoginForm() {
       router.replace("/");
     } catch (e) {
       if (e instanceof FirebaseError) {
-        let errorCode = e.code;
-        let errorMessage = e.message;
-        if (errorCode === "auth/user-disabled") {
+        switch (e.code) {
+          case "auth/user-disabled":
           setLoginError("This account has been deactivated.");
-        } else if (errorCode === "auth/wrong-password") {
-          setLoginError("Incorrect password");
-        } else if (errorCode === "auth/invalid-email") {
-          setLoginError("Invalid email");
-        } else if (errorCode === "auth/user-not-found") {
+            break;
+          case "auth/wrong-password":
+          case "auth/invalid-credential":
+            setLoginError("Incorrect email or password.");
+            break;
+          case "auth/invalid-email":
+            setLoginError("Invalid email address.");
+            break;
+          case "auth/user-not-found":
           setLoginError("User not found. Did you sign up?");
-        } else if (errorCode === "auth/invalid-credential") {
-          setLoginError("Incorrect user name or password");
-        } else {
-          setLoginError(errorMessage);
+            break;
+          default:
+            setLoginError(e.message);
         }
       }
     } finally {
