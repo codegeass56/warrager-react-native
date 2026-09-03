@@ -53,6 +53,7 @@ function RegistrationForm() {
       await set(ref(database, "users/" + userId), {
         profile_color: profileColor,
       });
+      router.replace("/");
     } catch (e) {
       if (e instanceof FirebaseError) {
         let errorCode = e.code;
@@ -146,7 +147,7 @@ function RegistrationForm() {
         <FormButton
           text="Login"
           mode="text"
-          onPress={() => router.navigate("/LoginScreen")}
+          onPress={() => router.replace("/LoginScreen")}
         />
       </View>
     </View>

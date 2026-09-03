@@ -236,7 +236,7 @@ function AddWarrantyForm() {
             style={styles.selectPictureBtn}
             onPress={() => {
               router.navigate({
-                pathname: `/home/CameraScreen`,
+                pathname: `/(home)/CameraScreen`,
                 params: {
                   previousScreenName: "AddWarrantyScreen",
                 },
@@ -260,7 +260,7 @@ function AddWarrantyForm() {
               style={styles.selectPictureBtn}
               onPress={() => {
                 router.navigate({
-                  pathname: `/home/CameraScreen`,
+                  pathname: `/(home)/CameraScreen`,
                   params: {
                     previousScreenName: "AddWarrantyScreen",
                   },

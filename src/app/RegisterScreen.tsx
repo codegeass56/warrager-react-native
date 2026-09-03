@@ -1,6 +1,6 @@
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
-import RegistrationForm from "../components/RegisterScreen/RegistrationForm";
-import RegistrationHeader from "../components/RegisterScreen/RegistrationHeader";
+import RegistrationForm from "../../components/RegisterScreen/RegistrationForm";
+import RegistrationHeader from "../../components/RegisterScreen/RegistrationHeader";
 
 function RegisterScreen() {
   return (

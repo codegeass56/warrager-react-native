@@ -273,7 +273,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                   style={styles.selectPictureBtn}
                   onPress={() => {
                     router.navigate({
-                      pathname: `/home/CameraScreen`,
+                      pathname: `/(home)/CameraScreen`,
                       params: {
                         previousScreenName: "EditWarrantyScreen",
                         productId,
@@ -309,7 +309,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                     style={styles.selectPictureBtn}
                     onPress={() => {
                       router.navigate({
-                        pathname: `/home/CameraScreen`,
+                        pathname: `/(home)/CameraScreen`,
                         params: {
                           previousScreenName: "EditWarrantyScreen",
                           productId,

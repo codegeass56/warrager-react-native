@@ -115,7 +115,7 @@ function LoginForm() {
         <FormButton
           text="Sign up"
           mode="text"
-          onPress={() => router.navigate("/RegisterScreen")}
+          onPress={() => router.replace("/RegisterScreen")}
         />
       </View>
     </View>

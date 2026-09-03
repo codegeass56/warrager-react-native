@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import { IconButton } from "react-native-paper";
-import ImagePreview from "../../components/ImagePreview";
+import ImagePreview from "../../../components/ImagePreview";
 
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();

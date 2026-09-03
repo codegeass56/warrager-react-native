@@ -104,7 +104,7 @@ export default function Product({
                 size={40}
                 onPress={() =>
                   router.navigate({
-                    pathname: `/home/edit-warranty/[productId]`,
+                    pathname: `/(home)/edit-warranty/[productId]`,
                     params: { productId },
                   })
                 }

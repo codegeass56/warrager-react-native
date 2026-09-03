@@ -11,7 +11,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { FAB, useTheme } from "react-native-paper";
-import SplashScreenComponent from "../../components/SplashScreenComponent";
 
 function HomeScreen() {
   const [profileColor, setProfileColor] = useState("red");
@@ -209,9 +208,9 @@ function HomeScreen() {
     });
   }
 
-  if (isInitialMount) {
-    return <SplashScreenComponent />;
-  }
+  // if (isInitialMount) {
+  //   return <SplashScreenComponent />;
+  // }
 
   return (
     <View
@@ -234,7 +233,7 @@ function HomeScreen() {
         {searchedProducts.length === 0 ? (
           <View style={styles.noProductsTextContainer}>
             <SectionTitle
-              text="No products yet? Try adding one!"
+              text="No products yet? Try adding one!" //TODO: Show a different message when no products are found during search
               style={styles.noProductsText}
             />
           </View>
@@ -256,7 +255,7 @@ function HomeScreen() {
               backgroundColor: colorScheme === "dark" ? "white" : "#1F41BB",
             },
           ]}
-          onPress={() => router.push("/home/add-warranty/AddWarrantyScreen")}
+          onPress={() => router.push("/(home)/add-warranty/AddWarrantyScreen")}
           color={colorScheme === "dark" ? "#031525" : "white"}
           mode="elevated"
           label="Product Warranty"

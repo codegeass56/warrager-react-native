@@ -1,4 +1,5 @@
-import { Slot } from "expo-router";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { Stack } from "expo-router";
 import { StyleSheet, useColorScheme, View } from "react-native";
 import {
   DefaultTheme,
@@ -6,10 +7,21 @@ import {
   MD3LightTheme,
   PaperProvider,
 } from "react-native-paper";
+import SplashScreenComponent from "../../components/SplashScreenComponent";
 
-function HomeLayout() {
+function RootLayout() {
+  return (
+    <AuthProvider>
+      <RootContent />
+    </AuthProvider>
+  );
+}
+
+function RootContent() {
+  const { isLoading } = useAuth();
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === "dark";
+
   const theme = {
     ...DefaultTheme,
     colors: {
@@ -43,9 +55,36 @@ function HomeLayout() {
           },
         ]}
       >
-        <Slot />
+        {isLoading ? <SplashScreenComponent /> : <RootNavigator />}
       </View>
     </PaperProvider>
+  );
+}
+
+function RootNavigator() {
+  const { user } = useAuth();
+
+  return (
+    <Stack>
+      <Stack.Protected guard={!!user}>
+        <Stack.Screen
+          name="(home)"
+          options={{ animation: "none", headerShown: false }}
+        />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!user}>
+        <Stack.Screen
+          name="LoginScreen"
+          options={{ animation: "none", headerShown: false }}
+        />
+      </Stack.Protected>
+
+      <Stack.Screen
+        name="RegisterScreen"
+        options={{ animation: "none", headerShown: false }}
+      />
+    </Stack>
   );
 }
 
@@ -55,4 +94,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeLayout;
+export default RootLayout;
