@@ -7,11 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
@@ -40,7 +35,18 @@
           "recordAudioAndroid": true
         }
       ],
-      "expo-web-browser"
+      "expo-web-browser",
+      "@react-native-community/datetimepicker",
+      "expo-image",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      "expo-status-bar"
     ],
     "experiments": {
       "typedRoutes": true
