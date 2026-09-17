@@ -1,5 +1,6 @@
 import SplashScreenComponent from "@/components/SplashScreenComponent";
-import { auth, database, storage } from "@/firebaseConfig";
+import { useAuth } from "@/context/AuthContext";
+import { database, storage } from "@/firebaseConfig";
 import { Image } from "expo-image";
 import * as Localization from "expo-localization";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -60,6 +61,7 @@ type FormData = {
 };
 
 function EditWarrantyForm({ productId }: { productId: string }) {
+  const { user } = useAuth();
   const [isEditable, setIsEditable] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [imageUri, setImageUri] = useState("");
@@ -67,7 +69,6 @@ function EditWarrantyForm({ productId }: { productId: string }) {
   const colorScheme = useColorScheme();
   const theme = useTheme();
   const router = useRouter();
-  const currentUser = auth.currentUser;
   const {
     control,
     handleSubmit,
@@ -79,7 +80,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
       get(
         child(
           dbRefMethod(database),
-          `users/${currentUser?.uid}/warranties/${productId}`,
+          `users/${user?.uid}/warranties/${productId}`,
         ),
       )
         .then((snapshot) => {
@@ -152,7 +153,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
       setIsLoading(true);
       let storageRef = storageRefMethod(
         storage,
-        `${currentUser?.uid}/images/${productId}`,
+        `${user?.uid}/images/${productId}`,
       );
 
       if (imageUri !== "") {
@@ -170,7 +171,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
         if (hasImage) await deleteObject(storageRef);
       }
       const updates: { [key: string]: any } = {};
-      updates["/users/" + currentUser?.uid + "/warranties/" + productId] =
+      updates["/users/" + user?.uid + "/warranties/" + productId] =
         warrantyData;
 
       await update(dbRefMethod(database), updates);

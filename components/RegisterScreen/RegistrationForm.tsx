@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/AuthContext";
 import { auth, database } from "@/firebaseConfig";
 import { useRouter } from "expo-router";
 import { FirebaseError } from "firebase/app";
@@ -26,6 +27,7 @@ type FormData = {
 const randomMC = require("random-material-color");
 
 function RegistrationForm() {
+  const { user } = useAuth();
   const router = useRouter();
   const [signUpError, setSignUpError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +50,7 @@ function RegistrationForm() {
       setSignUpError("");
       setIsLoading(true);
       await createUserWithEmailAndPassword(auth, data.email, data.password);
-      const userId = auth.currentUser?.uid;
+      const userId = user?.uid;
       const profileColor = randomMC.getColor();
       await set(ref(database, "users/" + userId), {
         profile_color: profileColor,

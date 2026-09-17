@@ -1,4 +1,5 @@
-import { auth, database, storage } from "@/firebaseConfig";
+import { useAuth } from "@/context/AuthContext";
+import { database, storage } from "@/firebaseConfig";
 import { Image } from "expo-image";
 import * as Localization from "expo-localization";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -50,11 +51,11 @@ type FormData = {
 };
 
 function AddWarrantyForm() {
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [imageUri, setImageUri] = useState("");
   const params = useLocalSearchParams<{ imageUri: string }>();
   const router = useRouter();
-  const currentUser = auth.currentUser;
   const theme = useTheme();
   const {
     control,
@@ -97,22 +98,22 @@ function AddWarrantyForm() {
     switch (data[WARRANTY_DURATION_TYPE_FIELD_NAME]) {
       case "Years":
         dateOfExpiry = dateOfPurchase.setFullYear(
-          dateOfPurchase.getFullYear() + warrantyPeriod
+          dateOfPurchase.getFullYear() + warrantyPeriod,
         );
         break;
       case "Months":
         dateOfExpiry = dateOfPurchase.setMonth(
-          dateOfPurchase.getMonth() + warrantyPeriod
+          dateOfPurchase.getMonth() + warrantyPeriod,
         );
         break;
       case "Days":
         dateOfExpiry = dateOfPurchase.setDate(
-          dateOfPurchase.getDate() + warrantyPeriod
+          dateOfPurchase.getDate() + warrantyPeriod,
         );
         break;
     }
     const newProductWarrantyKey = push(
-      child(dbRefMethod(database), "warranties")
+      child(dbRefMethod(database), "warranties"),
     ).key;
     const warrantyData = {
       [PRODUCT_NAME_FIELD_NAME]: data[PRODUCT_NAME_FIELD_NAME],
@@ -140,7 +141,7 @@ function AddWarrantyForm() {
       setIsLoading(true);
       let storageRef = storageRefMethod(
         storage,
-        `${currentUser?.uid}/images/${newProductWarrantyKey}`
+        `${user?.uid}/images/${newProductWarrantyKey}`,
       );
 
       if (imageUri !== "") {
@@ -151,16 +152,15 @@ function AddWarrantyForm() {
         const imageUrl = await getDownloadURL(
           storageRefMethod(
             storage,
-            `${currentUser?.uid}/images/${newProductWarrantyKey}`
-          )
+            `${user?.uid}/images/${newProductWarrantyKey}`,
+          ),
         );
 
         warrantyData["imageUrl"] = imageUrl;
       }
       const updates: { [key: string]: any } = {};
-      updates[
-        "/users/" + currentUser?.uid + "/warranties/" + newProductWarrantyKey
-      ] = warrantyData;
+      updates["/users/" + user?.uid + "/warranties/" + newProductWarrantyKey] =
+        warrantyData;
 
       await update(dbRefMethod(database), updates);
     } catch (error) {

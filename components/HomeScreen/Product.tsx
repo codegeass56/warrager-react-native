@@ -1,4 +1,5 @@
-import { auth, database, storage } from "@/firebaseConfig";
+import { useAuth } from "@/context/AuthContext";
+import { database, storage } from "@/firebaseConfig";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { ref as dbRefMethod, update } from "firebase/database";
@@ -40,10 +41,10 @@ export default function Product({
   closeSwipeable,
   onRefresh,
 }: Props) {
+  const { user } = useAuth();
   const router = useRouter();
   const colorScheme = useColorScheme();
   const theme = useTheme();
-  const currentUser = auth.currentUser;
   const swipeableRef = useRef<React.ComponentRef<typeof Swipeable>>(null);
 
   useEffect(() => {
@@ -54,10 +55,10 @@ export default function Product({
 
   async function onDelete() {
     const updates: { [key: string]: any } = {};
-    updates[`users/${auth.currentUser?.uid}/warranties/${productId}`] = null;
+    updates[`users/${user?.uid}/warranties/${productId}`] = null;
     let storageRef = storageRefMethod(
       storage,
-      `${currentUser?.uid}/images/${productId}`,
+      `${user?.uid}/images/${productId}`,
     );
     try {
       const updateTask = update(dbRefMethod(database), updates);
