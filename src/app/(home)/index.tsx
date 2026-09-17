@@ -14,7 +14,7 @@ import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { FAB, useTheme } from "react-native-paper";
 
 function HomeScreen() {
-  const { profileColor } = useAuth();
+  const { profileColor, user } = useAuth();
   const [isInitialMount, setIsInitialMount] = useState(true);
   const [productsList, setProductsList] = useState<Product[]>([]);
   const [refreshingProductList, setRefreshingProductList] = useState(false);
@@ -32,16 +32,15 @@ function HomeScreen() {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const theme = useTheme();
-  const currentUser = auth.currentUser;
 
   //TODO: Handle error when avatar label doesn't load
   const avatarLabel =
-    currentUser?.displayName?.charAt(0).toUpperCase() ||
-    currentUser?.email?.charAt(0).toUpperCase() ||
+    user?.displayName?.charAt(0).toUpperCase() ||
+    user?.email?.charAt(0).toUpperCase() ||
     "Er";
 
   const getProducts = useCallback(() => {
-    if (!currentUser?.uid) return;
+    if (!user?.uid) return;
 
     setRefreshingProductList(true);
     get(child(ref(database), `users/${currentUser.uid}`))
@@ -82,7 +81,7 @@ function HomeScreen() {
         setRefreshingProductList(false);
         setCloseSwipeable(false);
       });
-  }, [currentUser?.uid]);
+  }, [user?.uid]);
 
   useEffect(() => {
     if (isInitialMount) return;
@@ -99,9 +98,9 @@ function HomeScreen() {
 
   useEffect(() => {
     function getProfileData() {
-      if (!currentUser?.uid) return;
+      if (!user?.uid) return;
 
-      get(child(ref(database), `users/${currentUser.uid}`))
+      get(child(ref(database), `users/${user.uid}`))
         .then((snapshot) => {
           if (!snapshot.val()) {
             //TODO: Pass error to custom error screen
@@ -140,7 +139,7 @@ function HomeScreen() {
         });
     }
     getProfileData();
-  }, [currentUser?.uid]);
+  }, [user?.uid]);
 
   async function onLogout() {
     try {
