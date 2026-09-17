@@ -1,6 +1,8 @@
 import HeaderAndAccountMenu from "@/components/HeaderAndAccountMenu";
+import BrandsSkeleton from "@/components/HomeScreen/BrandsSkeleton";
 import Filter from "@/components/HomeScreen/Filter";
 import ProductList from "@/components/HomeScreen/ProductList";
+import ProductListSkeleton from "@/components/HomeScreen/ProductListSkeleton";
 import SearchBar from "@/components/HomeScreen/SearchBar";
 import SectionTitle from "@/components/SectionTitle";
 import { useAuth } from "@/context/AuthContext";
@@ -16,11 +18,12 @@ import { FAB, useTheme } from "react-native-paper";
 function HomeScreen() {
   const { profileColor, user } = useAuth();
   const [isInitialMount, setIsInitialMount] = useState(true);
-  const [productsList, setProductsList] = useState<Product[]>([]);
+  const [productsList, setProductsList] = useState<Product[] | null>(null);
   const [refreshingProductList, setRefreshingProductList] = useState(false);
   const [brands, setBrands] = useState<BrandObj>({});
   const [sortOrder, setSortOrder] = useState("Recently Added");
   const [closeSwipeable, setCloseSwipeable] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
 
   const { control, watch } = useForm({
     defaultValues: {
@@ -41,9 +44,8 @@ function HomeScreen() {
 
   const getProducts = useCallback(() => {
     if (!user?.uid) return;
-
     setRefreshingProductList(true);
-    get(child(ref(database), `users/${currentUser.uid}`))
+    get(child(ref(database), `users/${user.uid}`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           if (snapshot.val().warranties) {
@@ -64,9 +66,6 @@ function HomeScreen() {
               });
               return nextBrands;
             });
-          } else {
-            setProductsList([]);
-            setBrands({});
           }
         } else {
           //TODO: Pass error to custom error screen
@@ -99,6 +98,7 @@ function HomeScreen() {
   useEffect(() => {
     function getProfileData() {
       if (!user?.uid) return;
+      setIsFetching(true);
 
       get(child(ref(database), `users/${user.uid}`))
         .then((snapshot) => {
@@ -136,6 +136,7 @@ function HomeScreen() {
         })
         .finally(() => {
           setIsInitialMount(false);
+          setIsFetching(false);
         });
     }
     getProfileData();
@@ -152,8 +153,11 @@ function HomeScreen() {
       console.log("There was a problem signing out.", e);
     }
   }
+  let searchedProducts: Product[] = [];
 
-  let searchedProducts: Product[] = productsList.slice();
+  if (productsList !== null) {
+    searchedProducts = productsList.slice();
+  }
 
   if (searchQuery !== "") {
     searchedProducts = searchedProducts.filter(
@@ -203,6 +207,9 @@ function HomeScreen() {
   // if (isInitialMount) {
   //   return <SplashScreenComponent />;
   // }
+  const hasNoProducts = productsList === null && searchQuery === "";
+  const hasNoSearchResults =
+    searchQuery !== "" && searchedProducts.length === 0;
 
   return (
     <View
@@ -216,16 +223,29 @@ function HomeScreen() {
         />
         <View style={styles.searchFilterContainer}>
           <SearchBar control={control} />
-          <Filter
-            uniqueBrandNames={uniqueBrands}
-            onFilter={setBrands}
-            activeBrands={brands}
-          />
+          {isFetching ? (
+            <BrandsSkeleton />
+          ) : (
+            <Filter
+              uniqueBrandNames={uniqueBrands}
+              onFilter={setBrands}
+              activeBrands={brands}
+            />
+          )}
         </View>
-        {searchedProducts.length === 0 ? (
+        {isFetching ? (
+          <ProductListSkeleton />
+        ) : hasNoProducts ? (
           <View style={styles.noProductsTextContainer}>
             <SectionTitle
-              text="No products yet? Try adding one!" //TODO: Show a different message when no products are found during search
+              text="No products yet? Try adding one!"
+              style={styles.noProductsText}
+            />
+          </View>
+        ) : hasNoSearchResults ? (
+          <View style={styles.noProductsTextContainer}>
+            <SectionTitle
+              text={`No products found matching "${searchQuery}"`}
               style={styles.noProductsText}
             />
           </View>
