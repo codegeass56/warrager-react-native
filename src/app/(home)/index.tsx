@@ -6,24 +6,27 @@ import ProductListSkeleton from "@/components/HomeScreen/ProductListSkeleton";
 import SearchBar from "@/components/HomeScreen/SearchBar";
 import SectionTitle from "@/components/SectionTitle";
 import { useAuth } from "@/context/AuthContext";
-import { auth, database } from "@/firebaseConfig";
-import { useNavigation, useRouter } from "expo-router";
+import { auth } from "@/firebaseConfig";
+import { useWarrantyList } from "@/hooks/useWarrantyList";
+import { useRouter } from "expo-router";
 import { signOut } from "firebase/auth";
-import { child, get, ref } from "firebase/database";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { FAB, useTheme } from "react-native-paper";
 
 function HomeScreen() {
   const { profileColor, user } = useAuth();
-  const [isInitialMount, setIsInitialMount] = useState(true);
-  const [productsList, setProductsList] = useState<Product[] | null>(null);
-  const [refreshingProductList, setRefreshingProductList] = useState(false);
-  const [brands, setBrands] = useState<BrandObj>({});
   const [sortOrder, setSortOrder] = useState("Recently Added");
-  const [closeSwipeable, setCloseSwipeable] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
+  const {
+    productsList,
+    brands,
+    setBrands,
+    isFetching,
+    refreshingProductList,
+    closeSwipeable,
+    getProducts,
+  } = useWarrantyList();
 
   const { control, watch } = useForm({
     defaultValues: {
@@ -32,7 +35,6 @@ function HomeScreen() {
   });
   const searchQuery = watch("search");
   const router = useRouter();
-  const navigation = useNavigation();
   const colorScheme = useColorScheme();
   const theme = useTheme();
 
@@ -41,106 +43,6 @@ function HomeScreen() {
     user?.displayName?.charAt(0).toUpperCase() ||
     user?.email?.charAt(0).toUpperCase() ||
     "Er";
-
-  const getProducts = useCallback(() => {
-    if (!user?.uid) return;
-    setRefreshingProductList(true);
-    get(child(ref(database), `users/${user.uid}`))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          if (snapshot.val().warranties) {
-            const fetchedProducts: Product[] = Object.keys(
-              snapshot.val().warranties,
-            ).map((key) => {
-              return {
-                id: key,
-                ...snapshot.val().warranties[key],
-              };
-            });
-            setProductsList(fetchedProducts);
-            setBrands((prevBrands) => {
-              const nextBrands: BrandObj = {};
-              fetchedProducts.forEach((product) => {
-                const brandName = product.productBrand;
-                nextBrands[brandName] = prevBrands[brandName] ?? false;
-              });
-              return nextBrands;
-            });
-          }
-        } else {
-          //TODO: Pass error to custom error screen
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        //TODO: Pass error to custom error screen
-        console.error(error);
-      })
-      .finally(() => {
-        setRefreshingProductList(false);
-        setCloseSwipeable(false);
-      });
-  }, [user?.uid]);
-
-  useEffect(() => {
-    if (isInitialMount) return;
-    const unsubscribe = navigation.addListener("focus", () => {
-      setCloseSwipeable(true);
-      requestAnimationFrame(() => {
-        getProducts();
-      });
-    });
-
-    // Return the function to unsubscribe from the event so it gets removed on unmount
-    return unsubscribe;
-  }, [navigation, getProducts, isInitialMount]);
-
-  useEffect(() => {
-    function getProfileData() {
-      if (!user?.uid) return;
-      setIsFetching(true);
-
-      get(child(ref(database), `users/${user.uid}`))
-        .then((snapshot) => {
-          if (!snapshot.val()) {
-            //TODO: Pass error to custom error screen
-            console.log("No data available");
-            return;
-          }
-
-          if (snapshot.val().warranties) {
-            const fetchedProducts = Object.keys(snapshot.val().warranties).map(
-              (key) => {
-                return {
-                  id: key,
-                  ...snapshot.val().warranties[key],
-                };
-              },
-            );
-            setProductsList(fetchedProducts);
-            const derivedBrands = fetchedProducts.reduce(
-              (acc: BrandObj, product) => {
-                if (!acc[product.productBrand]) {
-                  acc[product.productBrand] = false;
-                }
-                return acc;
-              },
-              {},
-            );
-            setBrands(derivedBrands);
-          }
-        })
-        .catch((error) => {
-          //TODO: Pass error to custom error screen
-          console.error(error);
-        })
-        .finally(() => {
-          setIsInitialMount(false);
-          setIsFetching(false);
-        });
-    }
-    getProfileData();
-  }, [user?.uid]);
 
   async function onLogout() {
     try {
@@ -153,56 +55,36 @@ function HomeScreen() {
       console.log("There was a problem signing out.", e);
     }
   }
-  let searchedProducts: Product[] = [];
-
-  if (productsList !== null) {
-    searchedProducts = productsList.slice();
-  }
+  let searchedProducts: Product[] = productsList ? productsList.slice() : [];
 
   if (searchQuery !== "") {
+    const query = searchQuery.toLowerCase().trim();
     searchedProducts = searchedProducts.filter(
       (p) =>
-        p.productName
-          .toLowerCase()
-          .trim()
-          .includes(searchQuery.toLowerCase().trim()) ||
-        p.productBrand
-          .toLowerCase()
-          .trim()
-          .includes(searchQuery.toLowerCase().trim()) ||
+        p.productName.toLowerCase().trim().includes(query) ||
+        p.productBrand.toLowerCase().trim().includes(query) ||
         p.productPrice.includes(searchQuery.trim()),
     );
   }
-  const brandSet: Set<string> = new Set();
-  searchedProducts.forEach((product) => {
-    brandSet.add(product.productBrand);
-  });
-  const uniqueBrands: string[] = Array.from(brandSet);
 
-  if (Object.values(brands).some((brand) => brand === true)) {
+  const uniqueBrands = Array.from(
+    new Set(searchedProducts.map((p) => p.productBrand)),
+  );
+
+  if (Object.values(brands).some((b) => b === true)) {
     searchedProducts = searchedProducts.filter(
       (product) => brands[product.productBrand] === true,
     );
   }
 
-  if (sortOrder === "Recently Added") {
-    searchedProducts.sort((p1, p2) => {
-      return (
-        new Date(p2.dateCreated).getTime() - new Date(p1.dateCreated).getTime()
-      );
-    });
-  } else if (sortOrder === "Title") {
-    searchedProducts.sort((p1, p2) =>
-      p1.productName.localeCompare(p2.productName),
-    );
-  } else if (sortOrder === "Last Modified") {
-    searchedProducts.sort((p1, p2) => {
-      return (
-        new Date(p2.dateModified).getTime() -
-        new Date(p1.dateModified).getTime()
-      );
-    });
-  }
+  const sortFns: Record<string, (p1: Product, p2: Product) => number> = {
+    "Recently Added": (p1, p2) =>
+      new Date(p2.dateCreated).getTime() - new Date(p1.dateCreated).getTime(),
+    Title: (p1, p2) => p1.productName.localeCompare(p2.productName),
+    "Last Modified": (p1, p2) =>
+      new Date(p2.dateModified).getTime() - new Date(p1.dateModified).getTime(),
+  };
+  searchedProducts.sort(sortFns[sortOrder]);
 
   // if (isInitialMount) {
   //   return <SplashScreenComponent />;
