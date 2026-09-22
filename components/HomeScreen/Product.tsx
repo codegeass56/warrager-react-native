@@ -1,11 +1,8 @@
-import { useAuth } from "@/context/AuthContext";
-import { database, storage } from "@/firebaseConfig";
+import { useProductActions } from "@/hooks/useProductActions";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { ref as dbRefMethod, update } from "firebase/database";
-import { deleteObject, ref as storageRefMethod } from "firebase/storage";
 import { useEffect, useRef } from "react";
-import { Alert, StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, useColorScheme, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import { Icon, IconButton, Text, useTheme } from "react-native-paper";
@@ -41,7 +38,11 @@ export default function Product({
   closeSwipeable,
   onRefresh,
 }: Props) {
-  const { user } = useAuth();
+  const { showDeleteConfirmation } = useProductActions(
+    productId,
+    onRefresh,
+    imgSrc,
+  );
   const router = useRouter();
   const colorScheme = useColorScheme();
   const theme = useTheme();
@@ -52,46 +53,6 @@ export default function Product({
       swipeableRef.current?.close();
     }
   }, [closeSwipeable]);
-
-  async function onDelete() {
-    const updates: { [key: string]: any } = {};
-    updates[`users/${user?.uid}/warranties/${productId}`] = null;
-    let storageRef = storageRefMethod(
-      storage,
-      `${user?.uid}/images/${productId}`,
-    );
-    try {
-      const updateTask = update(dbRefMethod(database), updates);
-      const deletionTask = deleteObject(storageRef);
-      if (imgSrc) {
-        await Promise.all([updateTask, deletionTask]);
-      } else {
-        await updateTask;
-      }
-      onRefresh();
-    } catch (error) {
-      //TODO: Deal with deletion error
-      console.log(error);
-    }
-  }
-
-  function showDeleteConfirmation() {
-    Alert.alert(
-      "Are you sure you want to delete this warranty?",
-      "This action cannot be undone.",
-      [
-        {
-          text: "Confirm",
-          onPress: onDelete,
-        },
-        {
-          text: "Cancel",
-          onPress: () => {},
-          style: "cancel",
-        },
-      ],
-    );
-  }
 
   return (
     <GestureHandlerRootView>
