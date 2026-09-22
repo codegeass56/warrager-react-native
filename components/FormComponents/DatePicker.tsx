@@ -22,7 +22,7 @@ function DatePicker({ control, componentName, disabled }: Props) {
         Platform.OS === "ios" ? (
           <DateTimePicker
             value={value}
-            onChange={(event, selectedDate) => {
+            onValueChange={(event, selectedDate) => {
               onChange(selectedDate);
             }}
             timeZoneName={Localization.getCalendars()[0].timeZone ?? undefined}
