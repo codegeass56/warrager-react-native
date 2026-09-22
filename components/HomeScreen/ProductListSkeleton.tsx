@@ -29,9 +29,6 @@ const styles = StyleSheet.create({
   sortDropdownContainer: {
     alignSelf: "flex-end",
   },
-  padded: {
-    padding: 16,
-  },
   product: {
     flexDirection: "row",
     borderTopWidth: 1,
