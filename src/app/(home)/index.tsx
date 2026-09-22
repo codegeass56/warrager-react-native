@@ -11,7 +11,7 @@ import { useWarrantyList } from "@/hooks/useWarrantyList";
 import { useRouter } from "expo-router";
 import { signOut } from "firebase/auth";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { Platform, StyleSheet, useColorScheme, View } from "react-native";
 import { FAB, useTheme } from "react-native-paper";
 
@@ -28,12 +28,12 @@ function HomeScreen() {
     getProducts,
   } = useWarrantyList();
 
-  const { control, watch } = useForm({
+  const { control } = useForm({
     defaultValues: {
       search: "",
     },
   });
-  const searchQuery = watch("search");
+  const searchQuery = useWatch({ control, name: "search" });
   const router = useRouter();
   const colorScheme = useColorScheme();
   const theme = useTheme();
