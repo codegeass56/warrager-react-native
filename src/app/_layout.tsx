@@ -1,3 +1,5 @@
+import "expo-blob";
+
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { Stack } from "expo-router";
 import { StyleSheet, useColorScheme, View } from "react-native";
