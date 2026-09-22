@@ -1,17 +1,24 @@
 import SplashScreenComponent from "@/components/SplashScreenComponent";
-import { useAuth } from "@/context/AuthContext";
-import { database, storage } from "@/firebaseConfig";
-import { Image } from "expo-image";
-import * as Localization from "expo-localization";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { child, ref as dbRefMethod, get, update } from "firebase/database";
 import {
-  deleteObject,
-  getDownloadURL,
-  ref as storageRefMethod,
-  uploadBytes,
-} from "firebase/storage";
-import { useEffect, useState } from "react";
+  BRAND_FIELD_NAME,
+  CURRENCY_FIELD_NAME,
+  DATE_FIELD_NAME,
+  PRODUCT_NAME_FIELD_NAME,
+  PRODUCT_PRICE_FIELD_NAME,
+  STORE_CONTACT_FIELD_NAME,
+  STORE_EMAIL_FIELD_NAME,
+  STORE_NAME_FIELD_NAME,
+  WARRANTY_DURATION_TYPE_FIELD_NAME,
+  WARRANTY_PERIOD_FIELD_NAME,
+  type FormData,
+} from "@/constants/formFields";
+import { useAuth } from "@/context/AuthContext";
+import { database } from "@/firebaseConfig";
+import { useSaveWarranty } from "@/hooks/useSaveWarranty";
+import { useWarrantyImage } from "@/hooks/useWarrantyImage";
+import { Image } from "expo-image";
+import { child, ref as dbRefMethod, get } from "firebase/database";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Platform,
@@ -31,44 +38,16 @@ import TextField from "../FormComponents/TextField";
 import SectionTitle from "../SectionTitle";
 import VerticalDivider from "../VerticalDivider";
 
-const PRODUCT_NAME_FIELD_NAME = "productName";
-const DATE_FIELD_NAME = "dateOfPurchase";
-const CURRENCY_FIELD_NAME = "currencyType";
-const PRODUCT_PRICE_FIELD_NAME = "productPrice";
-const CATEGORY_FIELD_NAME = "productCategory";
-const WARRANTY_PERIOD_FIELD_NAME = "warrantyPeriod";
-const WARRANTY_DURATION_TYPE_FIELD_NAME = "warrantyDurationType";
-const BRAND_FIELD_NAME = "productBrand";
-const STORE_NAME_FIELD_NAME = "storeName";
-const STORE_LOCATION_FIELD_NAME = "storeLocation";
-const STORE_EMAIL_FIELD_NAME = "storeEmail";
-const STORE_CONTACT_FIELD_NAME = "storeContact";
-
-type FormData = {
-  [PRODUCT_NAME_FIELD_NAME]: string;
-  [DATE_FIELD_NAME]: Date;
-  [CURRENCY_FIELD_NAME]: string;
-  [PRODUCT_PRICE_FIELD_NAME]: string;
-  [CATEGORY_FIELD_NAME]: string;
-  [WARRANTY_PERIOD_FIELD_NAME]: string;
-  [WARRANTY_DURATION_TYPE_FIELD_NAME]: string;
-  [BRAND_FIELD_NAME]: string;
-  [STORE_NAME_FIELD_NAME]: string;
-  [STORE_LOCATION_FIELD_NAME]: string;
-  [STORE_EMAIL_FIELD_NAME]: string;
-  [STORE_CONTACT_FIELD_NAME]: string;
-  dateCreated: string;
-};
-
 function EditWarrantyForm({ productId }: { productId: string }) {
   const { user } = useAuth();
+  const { imageUri, setImageUri, openCamera, removeImage } = useWarrantyImage(
+    "EditWarrantyScreen",
+    productId,
+  );
+  const { isLoading, saveWarranty } = useSaveWarranty(productId);
   const [isEditable, setIsEditable] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [imageUri, setImageUri] = useState("");
-  const params = useLocalSearchParams<{ imageUri: string }>();
   const colorScheme = useColorScheme();
   const theme = useTheme();
-  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -104,93 +83,8 @@ function EditWarrantyForm({ productId }: { productId: string }) {
           console.error(error);
         }),
   });
-  async function onSaveEdit(data: FormData) {
-    //Create deep copy of date input
-    const dateOfPurchase = new Date(data[DATE_FIELD_NAME].getTime());
 
-    let warrantyPeriod = Number(data[WARRANTY_PERIOD_FIELD_NAME]);
-    let dateOfExpiry;
-    switch (data[WARRANTY_DURATION_TYPE_FIELD_NAME]) {
-      case "Years":
-        dateOfExpiry = dateOfPurchase.setFullYear(
-          dateOfPurchase.getFullYear() + warrantyPeriod,
-        );
-        break;
-      case "Months":
-        dateOfExpiry = dateOfPurchase.setMonth(
-          dateOfPurchase.getMonth() + warrantyPeriod,
-        );
-        break;
-      case "Days":
-        dateOfExpiry = dateOfPurchase.setDate(
-          dateOfPurchase.getDate() + warrantyPeriod,
-        );
-        break;
-    }
-    const warrantyData = {
-      [PRODUCT_NAME_FIELD_NAME]: data[PRODUCT_NAME_FIELD_NAME],
-      [DATE_FIELD_NAME]: new Intl.DateTimeFormat("en-GB", {
-        timeZone: Localization.getCalendars()[0].timeZone!,
-      }).format(data[DATE_FIELD_NAME]),
-      dateOfExpiry: new Intl.DateTimeFormat("en-GB", {
-        timeZone: Localization.getCalendars()[0].timeZone!,
-      }).format(dateOfExpiry),
-      [CURRENCY_FIELD_NAME]: data[CURRENCY_FIELD_NAME],
-      [PRODUCT_PRICE_FIELD_NAME]: data[PRODUCT_PRICE_FIELD_NAME],
-      [WARRANTY_PERIOD_FIELD_NAME]: data[WARRANTY_PERIOD_FIELD_NAME],
-      [WARRANTY_DURATION_TYPE_FIELD_NAME]:
-        data[WARRANTY_DURATION_TYPE_FIELD_NAME],
-      [BRAND_FIELD_NAME]: data[BRAND_FIELD_NAME],
-      [STORE_NAME_FIELD_NAME]: data[STORE_NAME_FIELD_NAME],
-      [STORE_EMAIL_FIELD_NAME]: data[STORE_EMAIL_FIELD_NAME],
-      [STORE_CONTACT_FIELD_NAME]: data[STORE_CONTACT_FIELD_NAME],
-      dateCreated: data.dateCreated,
-      dateModified: new Date(),
-      imageUrl: "",
-    };
-
-    try {
-      setIsLoading(true);
-      let storageRef = storageRefMethod(
-        storage,
-        `${user?.uid}/images/${productId}`,
-      );
-
-      if (imageUri !== "") {
-        const response = await fetch(imageUri);
-        const blob = await response.blob();
-
-        await uploadBytes(storageRef, blob);
-        const imageUrl = await getDownloadURL(storageRef);
-
-        warrantyData["imageUrl"] = imageUrl;
-      } else {
-        const hasImage = await getDownloadURL(storageRef)
-          .then(() => true)
-          .catch(() => false);
-        if (hasImage) await deleteObject(storageRef);
-      }
-      const updates: { [key: string]: any } = {};
-      updates["/users/" + user?.uid + "/warranties/" + productId] =
-        warrantyData;
-
-      await update(dbRefMethod(database), updates);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-      router.back();
-    }
-  }
-
-  useEffect(() => {
-    if (
-      Object.hasOwn(params, "imageUri") &&
-      params["imageUri"] !== "undefined"
-    ) {
-      setImageUri(params["imageUri"]);
-    }
-  }, [params]);
+  const onSaveEdit = (data: FormData) => saveWarranty(data, imageUri);
 
   return (
     <View style={styles.mainContainer}>
@@ -272,15 +166,7 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                   text={"Take Picture"}
                   mode="contained"
                   style={styles.selectPictureBtn}
-                  onPress={() => {
-                    router.navigate({
-                      pathname: `/(home)/CameraScreen`,
-                      params: {
-                        previousScreenName: "EditWarrantyScreen",
-                        productId,
-                      },
-                    });
-                  }}
+                  onPress={openCamera}
                 />
               ) : null}
               {!imageUri && !isEditable ? (
@@ -308,24 +194,13 @@ function EditWarrantyForm({ productId }: { productId: string }) {
                     text={"Change Picture"}
                     mode="contained"
                     style={styles.selectPictureBtn}
-                    onPress={() => {
-                      router.navigate({
-                        pathname: `/(home)/CameraScreen`,
-                        params: {
-                          previousScreenName: "EditWarrantyScreen",
-                          productId,
-                        },
-                      });
-                    }}
+                    onPress={openCamera}
                   />
                   <FormButton
                     text={"Remove Picture"}
                     mode="contained"
                     style={styles.selectPictureBtn}
-                    onPress={() => {
-                      router.setParams({ imageUri: undefined });
-                      setImageUri("");
-                    }}
+                    onPress={removeImage}
                   />
                 </View>
               </View>
